@@ -1,0 +1,212 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+
+:root {
+  /* CSB Brand Colors - matching cambridgesavings.com */
+  --csb-teal: #00857c;
+  --csb-teal-dark: #006b64;
+  --csb-teal-light: #00a89d;
+  --csb-charcoal: #333333;
+  --csb-gray-dark: #666666;
+  --csb-gray-medium: #999999;
+  --csb-gray-light: #f5f5f5;
+  --csb-white: #ffffff;
+  --csb-red: #c41230;
+  --csb-gold: #b8860b;
+}
+
+@theme {
+  --color-csb-teal: #00857c;
+  --color-csb-teal-dark: #006b64;
+  --color-csb-teal-light: #00a89d;
+  --color-csb-charcoal: #333333;
+}
+
+body {
+  font-family: 'Open Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: var(--csb-white);
+  color: var(--csb-charcoal);
+  line-height: 1.6;
+}
+
+/* CSB brand utilities */
+.bg-csb-teal { background-color: var(--csb-teal); }
+.bg-csb-teal-dark { background-color: var(--csb-teal-dark); }
+.bg-csb-charcoal { background-color: var(--csb-charcoal); }
+.text-csb-teal { color: var(--csb-teal); }
+.text-csb-charcoal { color: var(--csb-charcoal); }
+.border-csb-teal { border-color: var(--csb-teal); }
+
+.btn-primary {
+  background-color: var(--csb-teal);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  border: none;
+}
+.btn-primary:hover { background-color: var(--csb-teal-dark); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-secondary {
+  background-color: var(--csb-white);
+  color: var(--csb-teal);
+  padding: 0.75rem 2rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: 2px solid var(--csb-teal);
+}
+.btn-secondary:hover { 
+  background-color: var(--csb-teal); 
+  color: white;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--csb-charcoal);
+  margin-bottom: 0.5rem;
+}
+
+.form-input {
+  display: block;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  color: var(--csb-charcoal);
+  background-color: white;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-input:focus {
+  outline: none;
+  border-color: var(--csb-teal);
+  box-shadow: 0 0 0 3px rgba(0, 133, 124, 0.15);
+}
+
+.card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 2rem;
+  border: 1px solid #e5e5e5;
+}
+
+.product-card {
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: white;
+}
+.product-card:hover {
+  border-color: var(--csb-teal);
+  box-shadow: 0 4px 12px rgba(0, 133, 124, 0.15);
+}
+.product-card.selected {
+  border-color: var(--csb-teal);
+  background-color: rgba(0, 133, 124, 0.05);
+  box-shadow: 0 0 0 3px rgba(0, 133, 124, 0.15);
+}
+
+.step-dot {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.step-dot.completed {
+  background-color: var(--csb-teal);
+  color: white;
+}
+.step-dot.active {
+  background-color: var(--csb-teal);
+  color: white;
+  box-shadow: 0 0 0 4px rgba(0, 133, 124, 0.25);
+}
+.step-dot.pending {
+  background-color: #e5e5e5;
+  color: #999;
+}
+
+.section-header {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--csb-charcoal);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.required-star { color: var(--csb-red); }
+
+.error-text {
+  font-size: 0.8125rem;
+  color: var(--csb-red);
+  margin-top: 0.25rem;
+}
+
+.info-box {
+  background-color: rgba(0, 133, 124, 0.08);
+  border-left: 4px solid var(--csb-teal);
+  border-radius: 0 4px 4px 0;
+  padding: 1rem 1.25rem;
+  font-size: 0.9375rem;
+  color: var(--csb-charcoal);
+}
+
+/* FDIC Badge Banner */
+.fdic-banner {
+  background-color: var(--csb-gray-light);
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  color: var(--csb-gray-dark);
+  text-align: center;
+}
+
+/* Security Alert Banner */
+.security-banner {
+  background-color: #fff3cd;
+  border-bottom: 1px solid #ffc107;
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  color: #856404;
+}
+
+/* CSB Header style */
+.csb-header {
+  background-color: white;
+  border-bottom: 3px solid var(--csb-teal);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Hero sections */
+.hero-gradient {
+  background: linear-gradient(135deg, var(--csb-teal) 0%, var(--csb-teal-dark) 100%);
+}
+
+/* Footer */
+.csb-footer {
+  background-color: var(--csb-charcoal);
+  color: white;
+}
+
