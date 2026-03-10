@@ -46,7 +46,7 @@
         
         toggle-account (fn [account-id]
                          ;; Don't allow unchecking if checking is required for loan
-                         (when-not (and (= account-id "business-checking") checking-required?)
+                         (when-not (and (= account-id "small-business-checking") checking-required?)
                            (let [new-selection (if (contains? selected-accounts account-id)
                                                  (disj selected-accounts account-id)
                                                  (conj selected-accounts account-id))]
@@ -61,14 +61,14 @@
        [:h2.text-xl.font-bold.text-gray-900 "Select Your Accounts"]]
       [:p.text-gray-600.mb-6
        (if checking-required?
-         "Your loan approval includes a Business Checking account for payments. You can also add additional accounts."
+         "Your loan approval includes a Small Business Checking account for payments. You can also add additional accounts."
          "Choose the accounts that best fit your business needs.")]]
      
      ;; Account selection
      [:div.space-y-4
       (for [product state/account-products]
         (let [product-with-required (if (and checking-required? 
-                                              (= (:id product) "business-checking"))
+                                              (= (:id product) "small-business-checking"))
                                        (assoc product :required-for-loan true)
                                        product)]
           ^{:key (:id product)}
@@ -101,7 +101,7 @@
          [:div
           [:h4.font-semibold.mb-1 {:style {:color "#00857c"}} "Why Checking is Required"]
           [:p.text-sm.text-gray-600
-           "Your approved loan requires a Business Checking account for automatic payment deductions. "
+           "Your approved loan requires a Small Business Checking account for automatic payment deductions. "
            "This ensures timely payments and helps maintain your good standing."]]]])
      
      ;; Navigation

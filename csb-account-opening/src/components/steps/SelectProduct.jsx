@@ -2,9 +2,9 @@ import { useState } from 'react'
 
 const PRODUCTS = [
   {
-    id: 'business-checking',
+    id: 'small-business-checking',
     category: 'Checking',
-    name: 'Business Checking',
+    name: 'Small Business Checking',
     tagline: 'Everyday banking made simple',
     icon: '🏦',
     features: [
@@ -19,10 +19,10 @@ const PRODUCTS = [
     popular: true,
   },
   {
-    id: 'business-interest-checking',
+    id: 'business-growth-checking',
     category: 'Checking',
-    name: 'Business Interest Checking',
-    tagline: 'Earn interest while managing cash flow',
+    name: 'Business Growth Checking',
+    tagline: 'Built for growing businesses',
     icon: '💰',
     features: [
       'Earn interest on your balance',
@@ -36,26 +36,9 @@ const PRODUCTS = [
     popular: false,
   },
   {
-    id: 'business-savings',
-    category: 'Savings',
-    name: 'Business Savings',
-    tagline: 'Grow your business reserves',
-    icon: '🐷',
-    features: [
-      'Competitive interest rate',
-      'No monthly fee with $300 minimum balance',
-      'Up to 6 withdrawals per statement period',
-      'FDIC insured up to $250,000',
-      'Link to Business Checking for overdraft protection',
-    ],
-    minDeposit: '$300',
-    apy: 'Up to 0.15%',
-    popular: false,
-  },
-  {
-    id: 'business-money-market',
-    category: 'Savings',
-    name: 'Business Money Market',
+    id: 'small-business-money-market-special',
+    category: 'Money Market',
+    name: 'Small Business Money Market Special',
     tagline: 'Higher yields for larger balances',
     icon: '📊',
     features: [
@@ -70,13 +53,13 @@ const PRODUCTS = [
     popular: false,
   },
   {
-    id: 'business-cd',
+    id: '4-month-cd-special',
     category: 'CD',
-    name: 'Business Certificate of Deposit',
+    name: '4 Month Certificate of Deposit Special',
     tagline: 'Lock in a guaranteed rate',
     icon: '📅',
     features: [
-      'Terms from 3 months to 5 years',
+      '4 month term with special promotional rate',
       'Guaranteed fixed rate for the full term',
       'FDIC insured up to $250,000',
       'Automatic renewal option',
@@ -88,7 +71,7 @@ const PRODUCTS = [
   },
 ]
 
-const CATEGORIES = ['All', 'Checking', 'Savings', 'CD']
+const CATEGORIES = ['All', 'Checking', 'Money Market', 'CD']
 
 export default function SelectProduct({ formData, updateFormData, onNext, onBack }) {
   const [filter, setFilter] = useState('All')

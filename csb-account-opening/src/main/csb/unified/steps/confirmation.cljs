@@ -95,7 +95,7 @@
                 [:li.flex.items-center.gap-2.text-gray-700
                  [:span {:style {:color "#00857c"}} "✓"]
                  [:span.font-medium (:name product)]
-                 (when (and loan-approved? (= account-id "business-checking"))
+                 (when (and loan-approved? (= account-id "small-business-checking"))
                    [:span.text-xs.text-gray-500 "(for loan payments)"])]))]]
           [:div.mt-4.pt-4.border-t.border-gray-100
            [:h4.font-medium.text-gray-700.mb-2 "Next Steps for Your Accounts:"]

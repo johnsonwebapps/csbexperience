@@ -10,7 +10,7 @@
       [:a {:href "https://www.cambridgesavings.com"}
        [:img {:src "/images/header.png"
               :alt "Cambridge Savings Bank"
-              :style {:max-height "60px" :width "auto"}}]]
+              :style {:max-height "1280px" :width "2080px"}}]]
       [:div.flex.items-center.gap-4
        [:a.text-sm.font-semibold {:href "tel:888-418-5626"
                                    :style {:color "#00857c"}}
@@ -106,16 +106,16 @@
        [:h3.font-bold.mb-3 {:style {:color "#333" :font-size "22px"}}
         "Open a Business Account"]
        [:p.mb-6 {:style {:color "#666" :font-size "15px" :line-height "1.6"}}
-        "Checking, Savings, CDs & Money Market accounts tailored for your business needs."]
+        "Checking, Money Market & CD accounts tailored for your business needs."]
        [:ul.text-left.mb-6.space-y-2 {:style {:font-size "14px" :color "#555"}}
         [:li.flex.items-center.gap-2
-         [:span {:style {:color "#00857c"}} "✓"] "Business Checking"]
+         [:span {:style {:color "#00857c"}} "✓"] "Small Business Checking"]
         [:li.flex.items-center.gap-2
-         [:span {:style {:color "#00857c"}} "✓"] "Business Savings"]
+         [:span {:style {:color "#00857c"}} "✓"] "Business Growth Checking"]
         [:li.flex.items-center.gap-2
-         [:span {:style {:color "#00857c"}} "✓"] "Money Market Accounts"]
+         [:span {:style {:color "#00857c"}} "✓"] "Small Business Money Market Special"]
         [:li.flex.items-center.gap-2
-         [:span {:style {:color "#00857c"}} "✓"] "Certificates of Deposit (CDs)"]]
+         [:span {:style {:color "#00857c"}} "✓"] "4 Month Certificate of Deposit Special"]]
        [:button.w-full.font-bold.py-4.px-6.rounded-lg.text-white.transition-all
         {:style {:background-color "#00857c" :font-size "16px"}
          :on-click #(state/go-to-application!)}

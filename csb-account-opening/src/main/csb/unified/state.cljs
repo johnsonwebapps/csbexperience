@@ -91,23 +91,23 @@
 
 ;; Account products
 (def account-products
-  [{:id "business-checking"
-    :name "Business Checking"
+  [{:id "small-business-checking"
+    :name "Small Business Checking"
     :description "Essential checking for daily operations"
     :features ["No minimum balance" "Free online banking" "Debit card included"]
     :required-for-loan true}
-   {:id "business-savings"
-    :name "Business Savings"
-    :description "Grow your reserves with competitive rates"
-    :features ["Tiered interest rates" "Easy transfers" "No monthly fee with $500 balance"]}
-   {:id "money-market"
-    :name "Business Money Market"
+   {:id "business-growth-checking"
+    :name "Business Growth Checking"
+    :description "Built for growing businesses"
+    :features ["Earn interest on balance" "Unlimited transactions" "Free online banking"]}
+   {:id "small-business-money-market-special"
+    :name "Small Business Money Market Special"
     :description "Higher yields for larger balances"
     :features ["Tiered interest rates" "Check writing" "FDIC insured"]}
-   {:id "cd"
-    :name "Business CD"
-    :description "Lock in rates for guaranteed returns"
-    :features ["Terms from 3-60 months" "Competitive rates" "FDIC insured"]}])
+   {:id "4-month-cd-special"
+    :name "4 Month Certificate of Deposit Special"
+    :description "Lock in a guaranteed promotional rate"
+    :features ["4 month term" "Competitive promotional rate" "FDIC insured"]}])
 
 ;; Required documents for loan
 (def required-documents
@@ -204,7 +204,7 @@
    :approved-term ""
    
    ;; === Account Selection (Step 8) ===
-   :selected-accounts #{"business-checking"} ; Default to checking
+   :selected-accounts #{"small-business-checking"} ; Default to checking
    :checking-required-for-loan true
    
    ;; === Agreements ===

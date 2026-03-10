@@ -22,7 +22,7 @@
   []
   (state/update-form-data!
    {:account-purpose "new-business"
-    :selected-product "business-checking"
+    :selected-product "small-business-checking"
     :business-name "Acme Widget Company LLC"
     :dba "Acme Widgets"
     :business-type "llc-multi"

@@ -3,9 +3,9 @@
             [csb.state :as state]))
 
 (def products
-  [{:id "business-checking"
+  [{:id "small-business-checking"
     :category "Checking"
-    :name "Business Checking"
+    :name "Small Business Checking"
     :tagline "Everyday banking made simple"
     :icon "🏦"
     :features ["No monthly maintenance fee with $1,500 avg. daily balance"
@@ -16,10 +16,10 @@
     :min-deposit "$100"
     :apy nil
     :popular true}
-   {:id "business-interest-checking"
+   {:id "business-growth-checking"
     :category "Checking"
-    :name "Business Interest Checking"
-    :tagline "Earn interest while managing cash flow"
+    :name "Business Growth Checking"
+    :tagline "Built for growing businesses"
     :icon "💰"
     :features ["Earn interest on your balance"
                "Unlimited electronic transactions"
@@ -29,22 +29,9 @@
     :min-deposit "$500"
     :apy "Up to 0.10%"
     :popular false}
-   {:id "business-savings"
-    :category "Savings"
-    :name "Business Savings"
-    :tagline "Grow your business reserves"
-    :icon "🐷"
-    :features ["Competitive interest rate"
-               "No monthly fee with $300 minimum balance"
-               "Up to 6 withdrawals per statement period"
-               "FDIC insured up to $250,000"
-               "Link to Business Checking for overdraft protection"]
-    :min-deposit "$300"
-    :apy "Up to 0.15%"
-    :popular false}
-   {:id "business-money-market"
-    :category "Savings"
-    :name "Business Money Market"
+   {:id "small-business-money-market-special"
+    :category "Money Market"
+    :name "Small Business Money Market Special"
     :tagline "Higher yields for larger balances"
     :icon "📊"
     :features ["Tiered interest rates – earn more as balances grow"
@@ -55,12 +42,12 @@
     :min-deposit "$2,500"
     :apy "Up to 0.40%"
     :popular false}
-   {:id "business-cd"
+   {:id "4-month-cd-special"
     :category "CD"
-    :name "Business Certificate of Deposit"
+    :name "4 Month Certificate of Deposit Special"
     :tagline "Lock in a guaranteed rate"
     :icon "📅"
-    :features ["Terms from 3 months to 5 years"
+    :features ["4 month term with special promotional rate"
                "Guaranteed fixed rate for the full term"
                "FDIC insured up to $250,000"
                "Automatic renewal option"
@@ -69,7 +56,7 @@
     :apy "Up to 4.50%"
     :popular false}])
 
-(def categories ["All" "Checking" "Savings" "CD"])
+(def categories ["All" "Checking" "Money Market" "CD"])
 
 (defn product-card [product selected]
   [:div {:class (str "product-card relative cursor-pointer "

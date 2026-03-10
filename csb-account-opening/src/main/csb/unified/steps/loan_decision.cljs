@@ -36,7 +36,7 @@
      [:div
       [:h4.font-semibold.mb-1 {:style {:color "#00857c"}} "Checking Account Required"]
       [:p.text-sm.text-gray-600
-       "As part of your loan approval, we'll open a Business Checking account for your loan payments. "
+       "As part of your loan approval, we'll open a Small Business Checking account for your loan payments. "
        "This account has no monthly fees and includes free online banking."]]]]])
 
 (defn denied-view [form-data]

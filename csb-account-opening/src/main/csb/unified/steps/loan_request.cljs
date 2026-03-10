@@ -122,7 +122,7 @@
        [:div
         [:h4.font-semibold.mb-1 {:style {:color "#00857c"}} "Account Requirement"]
         [:p.text-sm.text-gray-600
-         "If your loan is approved, a Cambridge Savings Bank Business Checking account will be required for loan payments. "
+         "If your loan is approved, a Cambridge Savings Bank Small Business Checking account will be required for loan payments. "
          "We'll set this up for you automatically at no additional cost."]]]]
      
      ;; Navigation

@@ -39,11 +39,10 @@
    {:value "authorized-signer" :label "Authorized Signer"}])
 
 (def products-map
-  {"business-checking" "Business Checking"
-   "business-interest-checking" "Business Interest Checking"
-   "business-savings" "Business Savings"
-   "business-money-market" "Business Money Market"
-   "business-cd" "Business Certificate of Deposit"})
+  {"small-business-checking" "Small Business Checking"
+   "business-growth-checking" "Business Growth Checking"
+   "small-business-money-market-special" "Small Business Money Market Special"
+   "4-month-cd-special" "4 Month Certificate of Deposit Special"})
 
 (def purpose-map
   {"new-business" "New Business"
