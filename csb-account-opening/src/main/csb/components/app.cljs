@@ -11,7 +11,9 @@
             [csb.components.steps.review :refer [review-step]]
             [csb.components.steps.confirmation :refer [confirmation-step]]
             [csb.loan.app :as loan-app]
-            [csb.unified.app :as unified-app]))
+            [csb.unified.app :as unified-app]
+            [csb.oao.app :as oao-app]
+            [csb.oao.state :as oao-state]))
 
 (defn mobile-step-indicator [current-step steps]
   [:div.lg:hidden.mb-4
@@ -84,4 +86,13 @@
       :application [application-page]
       :loan-application [loan-app/loan-app]
       :unified-application [unified-app/unified-app]
+      :oao-sso (do (when-not (:entry-type (:form-data @oao-state/app-state))
+                     (oao-state/init-sso-flow!))
+                   [oao-app/oao-app])
+      :oao-new-enroll (do (when-not (:entry-type (:form-data @oao-state/app-state))
+                            (oao-state/init-new-enroll-flow!))
+                          [oao-app/oao-app])
+      :oao-ob-login (do (when-not (:entry-type (:form-data @oao-state/app-state))
+                          (oao-state/init-ob-login-flow!))
+                        [oao-app/oao-app])
       [landing-page])))

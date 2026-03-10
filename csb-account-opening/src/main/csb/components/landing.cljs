@@ -147,6 +147,99 @@
          :on-click #(state/go-to-loan-application!)}
         "Apply for a Loan →"]]]
      
+     ;; OAO & OLB Integration Section
+     [:div.flex.items-center.gap-4.mt-12.mb-8
+      [:div.flex-1.h-px {:style {:background-color "#ddd"}}]
+      [:span.text-gray-400.text-sm.font-medium "OAO & ONLINE BANKING INTEGRATION"]
+      [:div.flex-1.h-px {:style {:background-color "#ddd"}}]]
+     
+     [:div {:style {:display "grid"
+                    :grid-template-columns "repeat(3, 1fr)"
+                    :gap "1.5rem"
+                    :max-width "1100px"
+                    :margin "0 auto"}}
+      
+      ;; Q2-BUS-035: SSO from Online Banking
+      [:div.bg-white.rounded-xl.p-6.text-center.flex.flex-col
+       {:style {:box-shadow "0 4px 20px rgba(0,0,0,0.08)"
+                :border "1px solid #e5e5e5"}}
+       [:div.mb-4 {:style {:font-size "48px"}} "🔐"]
+       [:div.mb-3
+        [:span.px-2.py-1.rounded-full.text-xs.font-bold
+         {:style {:background-color "#EFF6FF" :color "#1D4ED8"}} "Q2-BUS-035"]]
+       [:h3.font-bold.mb-3 {:style {:color "#333" :font-size "18px"}}
+        "Open Account via Online Banking SSO"]
+       [:p.mb-4.flex-1 {:style {:color "#666" :font-size "14px" :line-height "1.6"}}
+        "Already signed in to Online Banking? Open a new account with your information pre-filled — no re-entry required."]
+       [:ul.text-left.mb-6.space-y-2 {:style {:font-size "13px" :color "#555"}}
+        [:li.flex.items-center.gap-2
+         [:span {:style {:color "#00857c"}} "✓"] "SSO from authenticated OB session"]
+        [:li.flex.items-center.gap-2
+         [:span {:style {:color "#00857c"}} "✓"] "JWT token with verified attributes"]
+        [:li.flex.items-center.gap-2
+         [:span {:style {:color "#00857c"}} "✓"] "Pre-filled application"]
+        [:li.flex.items-center.gap-2
+         [:span {:style {:color "#00857c"}} "✓"] "Account linked to OB profile"]]
+       [:button.w-full.font-bold.py-3.px-6.rounded-lg.text-white.transition-all
+        {:style {:background-color "#00857c" :font-size "15px"}
+         :on-click #(state/go-to-oao-sso!)}
+        "Open Account (SSO) →"]]
+      
+      ;; Q2-BUS-035A: New Customer + OLB Enrollment
+      [:div.bg-white.rounded-xl.p-6.text-center.flex.flex-col
+       {:style {:box-shadow "0 4px 20px rgba(0,0,0,0.08)"
+                :border "1px solid #e5e5e5"}}
+       [:div.mb-4 {:style {:font-size "48px"}} "🌐"]
+       [:div.mb-3
+        [:span.px-2.py-1.rounded-full.text-xs.font-bold
+         {:style {:background-color "#F0FDF4" :color "#166534"}} "Q2-BUS-035A"]]
+       [:h3.font-bold.mb-3 {:style {:color "#333" :font-size "18px"}}
+        "Open Account + Enroll in Online Banking"]
+       [:p.mb-4.flex-1 {:style {:color "#666" :font-size "14px" :line-height "1.6"}}
+        "New to CSB? Open your business account and set up Online Banking access — all in one application."]
+       [:ul.text-left.mb-6.space-y-2 {:style {:font-size "13px" :color "#555"}}
+        [:li.flex.items-center.gap-2
+         [:span {:style {:color "#00857c"}} "✓"] "Full account application"]
+        [:li.flex.items-center.gap-2
+         [:span {:style {:color "#00857c"}} "✓"] "Identity verification via Alloy"]
+        [:li.flex.items-center.gap-2
+         [:span {:style {:color "#00857c"}} "✓"] "OLB credential creation (Q2 Caliper)"]
+        [:li.flex.items-center.gap-2
+         [:span {:style {:color "#00857c"}} "✓"] "MFA setup included"]]
+       [:button.w-full.font-bold.py-3.px-6.rounded-lg.text-white.transition-all
+        {:style {:background-color "#00857c" :font-size "15px"}
+         :on-click #(state/go-to-oao-new-enroll!)}
+        "Open Account + Enroll →"]]
+      
+      ;; Q2-BUS-035B: Existing Customer via OB Credentials
+      [:div.bg-white.rounded-xl.p-6.text-center.flex.flex-col
+       {:style {:box-shadow "0 4px 20px rgba(0,0,0,0.08)"
+                :border "1px solid #e5e5e5"}}
+       [:div.mb-4 {:style {:font-size "48px"}} "🔑"]
+       [:div.mb-3
+        [:span.px-2.py-1.rounded-full.text-xs.font-bold
+         {:style {:background-color "#FFF7ED" :color "#9A3412"}} "Q2-BUS-035B"]]
+       [:h3.font-bold.mb-3 {:style {:color "#333" :font-size "18px"}}
+        "Open Account with OB Credentials"]
+       [:p.mb-4.flex-1 {:style {:color "#666" :font-size "14px" :line-height "1.6"}}
+        "Already have Online Banking? Sign in from the public website to pre-fill your application. No SSO needed."]
+       [:ul.text-left.mb-6.space-y-2 {:style {:font-size "13px" :color "#555"}}
+        [:li.flex.items-center.gap-2
+         [:span {:style {:color "#00857c"}} "✓"] "Login via OB credentials"]
+        [:li.flex.items-center.gap-2
+         [:span {:style {:color "#00857c"}} "✓"] "Q2 Caliper API authentication"]
+        [:li.flex.items-center.gap-2
+         [:span {:style {:color "#00857c"}} "✓"] "Pre-filled from identity token"]
+        [:li.flex.items-center.gap-2
+         [:span {:style {:color "#00857c"}} "✓"] "Account linked to existing profile"]]
+       [:button.w-full.font-bold.py-3.px-6.rounded-lg.transition-all
+        {:style {:background-color "#fff" 
+                 :color "#00857c" 
+                 :font-size "15px"
+                 :border "2px solid #00857c"}
+         :on-click #(state/go-to-oao-ob-login!)}
+        "Sign In & Open Account →"]]]
+     
      ;; Additional Info
      [:div.mt-12.text-center
       [:p {:style {:color "#666" :font-size "15px"}}

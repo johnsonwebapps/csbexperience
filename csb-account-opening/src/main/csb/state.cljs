@@ -71,6 +71,18 @@
   (swap! app-state assoc :page :unified-application)
   (.scrollTo js/window #js {:top 0 :behavior "smooth"}))
 
+(defn go-to-oao-sso! []
+  (swap! app-state assoc :page :oao-sso)
+  (.scrollTo js/window #js {:top 0 :behavior "smooth"}))
+
+(defn go-to-oao-new-enroll! []
+  (swap! app-state assoc :page :oao-new-enroll)
+  (.scrollTo js/window #js {:top 0 :behavior "smooth"}))
+
+(defn go-to-oao-ob-login! []
+  (swap! app-state assoc :page :oao-ob-login)
+  (.scrollTo js/window #js {:top 0 :behavior "smooth"}))
+
 (defn go-to-landing! []
   (swap! app-state assoc :page :landing)
   (.scrollTo js/window #js {:top 0 :behavior "smooth"}))
