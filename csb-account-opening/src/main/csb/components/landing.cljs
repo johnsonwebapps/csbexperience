@@ -10,7 +10,7 @@
       [:a {:href "https://www.cambridgesavings.com"}
        [:img {:src "/images/header.png"
               :alt "Cambridge Savings Bank"
-              :style {:max-height "1280px" :width "2080px"}}]]
+              :style {:max-height "680px" :width "2080px"}}]]
       [:div.flex.items-center.gap-4
        [:a.text-sm.font-semibold {:href "tel:888-418-5626"
                                    :style {:color "#00857c"}}

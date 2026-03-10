@@ -135,7 +135,7 @@
         {:on-click go-to-landing!}
         [:img {:src "/images/header.png" 
                :alt "Cambridge Savings Bank"
-               :style {:height "1280px"}}]]
+               :style {:height "680px"}}]]
        [:div.text-white.text-sm.flex.items-center.gap-4
         [:span "Need Help?"]
         [:a.font-medium.hover:underline {:href "tel:1-888-418-5626"} "1-888-418-5626"]]]]
