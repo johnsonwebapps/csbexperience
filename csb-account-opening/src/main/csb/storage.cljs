@@ -99,7 +99,9 @@
   (let [apps (get-all-applications)
         header ";; CSB Business Banking Applications Database\n;; Generated: "
         timestamp (.toISOString (js/Date.))
-        content (str header timestamp "\n;; Copy this file to: resources/public/data/applications.edn\n"
+        content (str header timestamp 
+                     "\n;; Move this file to: csb-account-opening/resources/public/data/applications.edn"
+                     "\n;; Then: git add resources/public/data/applications.edn && git commit -m 'Update app data' && git push\n"
                      (with-out-str (pprint/pprint apps)))
         blob (js/Blob. #js [content] #js {:type "text/plain"})
         url (.createObjectURL js/URL blob)

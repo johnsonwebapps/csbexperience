@@ -174,10 +174,11 @@
             [:span.text-sm.text-green-600 "✓ Imported successfully!"])
           (when (= @import-status :error)
             [:span.text-sm.text-red-600 "✗ Import failed"])]]
-        [:div.text-xs.text-gray-500.text-right {:style {:min-width "140px"}}
-         [:div "Save exported file to:"]
-         [:div.font-mono "resources/public/"]
-         [:div.font-mono "data/applications.edn"]]]])))
+        [:div.text-xs.text-gray-500 {:style {:min-width "200px"}}
+         [:div.font-medium.mb-1 "Move exported file to:"]
+         [:div.font-mono.text-xs.break-all {:style {:color "#00857c"}}
+          "csb-account-opening/resources/public/data/applications.edn"]
+         [:div.mt-2.text-gray-400 "Then: git add, commit, push"]]]])))
 
 (defn dashboard []
   (let [apps-atom (r/atom (storage/get-all-applications))
