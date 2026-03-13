@@ -13,7 +13,7 @@
             [csb.unified.steps.review :refer [review-step]]
             [csb.unified.steps.confirmation :refer [confirmation-step]]))
 
-(defn get-visible-steps [flow-type loan-decision]
+(defn get-visible-steps [flow-type loan-decision continue-with-account-after-denial]
   (cond
     (nil? flow-type)
     [{:id :intent :label "Get Started" :number 1}]
@@ -25,6 +25,19 @@
      {:id :account-selection :label "Select Accounts" :number 4}
      {:id :review :label "Review & Submit" :number 5}]
     
+    ;; Loan denied but user wants to continue with account
+    (and (= loan-decision :denied) continue-with-account-after-denial)
+    [{:id :intent :label "Get Started" :number 1}
+     {:id :business-info :label "Business Information" :number 2}
+     {:id :owner-info :label "Owner Information" :number 3}
+     {:id :loan-request :label "Loan Request" :number 4}
+     {:id :financials :label "Financial Details" :number 5}
+     {:id :documents :label "Documents" :number 6}
+     {:id :loan-decision :label "Loan Decision" :number 7}
+     {:id :account-selection :label "Select Accounts" :number 8}
+     {:id :review :label "Review & Submit" :number 9}]
+    
+    ;; Loan denied and user does NOT want to continue with account
     (= loan-decision :denied)
     [{:id :intent :label "Get Started" :number 1}
      {:id :business-info :label "Business Information" :number 2}
@@ -57,7 +70,8 @@
   (let [{:keys [current-step form-data]} @state/app-state
         flow-type (:flow-type form-data)
         loan-decision (:loan-decision form-data)
-        steps (get-visible-steps flow-type loan-decision)
+        continue-with-account? (:continue-with-account-after-denial form-data)
+        steps (get-visible-steps flow-type loan-decision continue-with-account?)
         current-idx (get-step-index current-step steps)]
     [:div.w-72.flex-shrink-0
      [:div {:style {:background-color "#00857c"}
@@ -147,7 +161,8 @@
   (let [{:keys [current-step submitted form-data]} @state/app-state
         flow-type (:flow-type form-data)
         loan-decision (:loan-decision form-data)
-        steps (get-visible-steps flow-type loan-decision)
+        continue-with-account? (:continue-with-account-after-denial form-data)
+        steps (get-visible-steps flow-type loan-decision continue-with-account?)
         current-idx (get-step-index current-step steps)
         step-info (when current-idx (nth steps current-idx nil))]
     [:div.min-h-screen.flex.flex-col {:style {:background-color "#f0f5f4"}}

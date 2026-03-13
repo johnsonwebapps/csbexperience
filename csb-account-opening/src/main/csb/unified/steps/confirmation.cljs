@@ -8,9 +8,12 @@
   (let [form-data (:form-data @state/app-state)
         flow-type (:flow-type form-data)
         loan-decision (:loan-decision form-data)
+        continue-with-account? (:continue-with-account-after-denial form-data)
         is-loan-flow (not= flow-type :account-only)
         loan-approved? (= loan-decision :approved)
-        has-accounts? (and (not= loan-decision :denied)
+        loan-denied? (= loan-decision :denied)
+        ;; Has accounts if: not denied, OR denied but chose to continue with account
+        has-accounts? (and (or (not loan-denied?) continue-with-account?)
                            (seq (:selected-accounts form-data)))
         
         today (.toLocaleDateString (js/Date.)
@@ -24,21 +27,32 @@
      ;; Success Header
      [:div.card.text-center.py-8
       [:div.w-20.h-20.rounded-full.flex.items-center.justify-center.mx-auto.mb-4
-       {:class (if (= loan-decision :denied) "bg-yellow-100" "bg-green-100")}
-       (if (= loan-decision :denied)
+       {:class (cond
+                 (and loan-denied? (not continue-with-account?)) "bg-yellow-100"
+                 (and loan-denied? continue-with-account?) "bg-blue-100"
+                 :else "bg-green-100")}
+       (cond
+         (and loan-denied? (not continue-with-account?))
          [:span.text-4xl "📋"]
+         (and loan-denied? continue-with-account?)
+         [:span.text-4xl "🏦"]
+         :else
          [:svg.w-10.h-10.text-green-600 {:fill "none" :viewBox "0 0 24 24" :stroke "currentColor"}
           [:path {:stroke-linecap "round" :stroke-linejoin "round" :stroke-width 2.5
                   :d "M5 13l4 4L19 7"}]])]
       [:h1.text-2xl.font-bold.text-gray-900.mb-2 
        (cond
-         (= loan-decision :denied) "Application Received"
+         (and loan-denied? (not continue-with-account?)) "Application Received"
+         (and loan-denied? continue-with-account?) "Account Opening Submitted!"
          loan-approved? "Congratulations!"
          :else "Application Submitted!")]
       [:p.text-gray-600
        (cond
-         (= loan-decision :denied)
+         (and loan-denied? (not continue-with-account?))
          "Thank you for applying. We were unable to approve your loan at this time."
+         
+         (and loan-denied? continue-with-account?)
+         "While we couldn't approve your loan, your business account application has been submitted."
          
          loan-approved?
          (str "Your loan has been pre-approved and your accounts are being opened!")
@@ -46,6 +60,20 @@
          :else
          "Your application has been received and is being processed.")]
       [:p.text-sm.text-gray-400.mt-3 today]]
+     
+     ;; Loan Denial Notice (if denied but continuing with account)
+     (when (and loan-denied? continue-with-account?)
+       [:div.card
+        [:div.flex.items-center.gap-3.mb-4
+         [:div.text-2xl "ℹ️"]
+         [:h2.font-bold.text-lg.text-gray-700 "Loan Application Status"]]
+        [:div.rounded-lg.p-4 {:style {:background-color "#fef2f2"}}
+         [:p.text-red-700.font-medium.mb-2 "Loan Not Approved"]
+         [:p.text-sm.text-gray-600 
+          "We were unable to approve your loan application at this time. "
+          "However, we're proceeding with your business account opening."]
+         [:p.text-sm.text-gray-500.mt-2
+          "You may appeal this decision or reapply in 6 months. Call us at 1-888-418-5626 for more information."]]])
      
      ;; Loan Confirmation (if applicable)
      (when (and is-loan-flow loan-approved?)
@@ -104,14 +132,14 @@
             [:li "2. Welcome email with online banking access"]
             [:li "3. Debit card mailed within 7-10 days"]]]]))
      
-     ;; Denied loan - no accounts opened
-     (when (= loan-decision :denied)
+     ;; Denied loan - no accounts opened (only if user declined to continue with account)
+     (when (and loan-denied? (not continue-with-account?))
        [:div.card
         [:div.flex.items-center.gap-3.mb-4
          [:div.text-2xl "ℹ️"]
          [:h2.font-bold.text-lg.text-gray-700 "Application Status"]]
         [:p.text-gray-600.mb-4
-         "Since your loan application was not approved, no accounts have been opened at this time."]
+         "Since your loan application was not approved and you chose not to open a business account, no products have been opened at this time."]
         [:div.rounded-lg.p-4 {:style {:background-color "#fef3c7"}}
          [:h4.font-medium.text-yellow-800.mb-2 "Your Options:"]
          [:ul.text-sm.text-yellow-700.space-y-1

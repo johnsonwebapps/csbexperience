@@ -39,37 +39,61 @@
        "As part of your loan approval, we'll open a Small Business Checking account for your loan payments. "
        "This account has no monthly fees and includes free online banking."]]]]])
 
-(defn denied-view [form-data]
-  [:div.space-y-6
-   [:div.card.text-center.py-8
-    [:div.w-20.h-20.rounded-full.bg-red-100.flex.items-center.justify-center.mx-auto.mb-4
-     [:svg.w-10.h-10.text-red-600 {:fill "none" :viewBox "0 0 24 24" :stroke "currentColor"}
-      [:path {:stroke-linecap "round" :stroke-linejoin "round" :stroke-width 2.5
-              :d "M6 18L18 6M6 6l12 12"}]]]
-    [:h2.text-2xl.font-bold.text-gray-900.mb-2 "We're Unable to Approve Your Loan"]
-    [:p.text-gray-600 (:loan-decision-notes form-data)]]
-   
-   [:div.card
-    [:h3.font-semibold.text-lg.mb-4 "What This Means"]
-    [:p.text-gray-600.mb-4
-     "Based on the information provided, we're unable to approve your loan application at this time. "
-     "This decision is based on various factors including credit history, business financials, and loan-to-revenue ratio."]
-    [:p.text-gray-600
-     "Since a loan was not approved, we will not be opening a checking account. "
-     "However, you can still apply for a business account separately if you'd like."]]
-   
-   [:div.card
-    [:h3.font-semibold.text-lg.mb-4 "Next Steps"]
-    [:ul.space-y-3.text-gray-600
-     [:li.flex.gap-3
-      [:span {:style {:color "#00857c"}} "•"]
-      "You may appeal this decision by calling our business banking team at 1-888-418-5626"]
-     [:li.flex.gap-3
-      [:span {:style {:color "#00857c"}} "•"]
-      "You may reapply in 6 months if your financial situation changes"]
-     [:li.flex.gap-3
-      [:span {:style {:color "#00857c"}} "•"]
-      "Consider speaking with a banker about other financing options"]]]])
+(defn denied-view [_form-data _on-continue-with-account]
+  (let [wants-account? (r/atom false)]
+    (fn [form-data on-continue-with-account]
+      [:div.space-y-6
+       [:div.card.text-center.py-8
+        [:div.w-20.h-20.rounded-full.bg-red-100.flex.items-center.justify-center.mx-auto.mb-4
+         [:svg.w-10.h-10.text-red-600 {:fill "none" :viewBox "0 0 24 24" :stroke "currentColor"}
+          [:path {:stroke-linecap "round" :stroke-linejoin "round" :stroke-width 2.5
+                  :d "M6 18L18 6M6 6l12 12"}]]]
+        [:h2.text-2xl.font-bold.text-gray-900.mb-2 "We're Unable to Approve Your Loan"]
+        [:p.text-gray-600 (:loan-decision-notes form-data)]]
+       
+       [:div.card
+        [:h3.font-semibold.text-lg.mb-4 "What This Means"]
+        [:p.text-gray-600.mb-4
+         "Based on the information provided, we're unable to approve your loan application at this time. "
+         "This decision is based on various factors including credit history, business financials, and loan-to-revenue ratio."]]
+       
+       ;; Option to open an account anyway
+       [:div.card.border-2 {:style {:border-color (if @wants-account? "#00857c" "#e5e7eb")
+                                     :background-color (when @wants-account? "rgba(0, 133, 124, 0.05)")}}
+        [:div.flex.items-start.gap-4
+         [:div.flex-shrink-0.mt-1
+          [:input {:type "checkbox"
+                   :checked @wants-account?
+                   :on-change #(do (reset! wants-account? (not @wants-account?))
+                                   (on-continue-with-account @wants-account?))
+                   :class "w-5 h-5 rounded border-gray-300"
+                   :style {:accent-color "#00857c"}}]]
+         [:div
+          [:h3.font-semibold.text-lg.mb-2 {:style {:color (if @wants-account? "#00857c" "#333")}}
+           "Would you still like to open a business account?"]
+          [:p.text-gray-600.text-sm.mb-3
+           "Even though your loan wasn't approved, you can still open a business checking, savings, "
+           "or money market account with Cambridge Savings Bank."]
+          [:div.flex.flex-wrap.gap-4.text-sm
+           [:span.flex.items-center.gap-1
+            [:span {:style {:color "#00857c"}} "✓"] "No monthly fees available"]
+           [:span.flex.items-center.gap-1
+            [:span {:style {:color "#00857c"}} "✓"] "Free online banking"]
+           [:span.flex.items-center.gap-1
+            [:span {:style {:color "#00857c"}} "✓"] "Debit card included"]]]]]
+       
+       [:div.card
+        [:h3.font-semibold.text-lg.mb-4 "Other Options"]
+        [:ul.space-y-3.text-gray-600
+         [:li.flex.gap-3
+          [:span {:style {:color "#00857c"}} "•"]
+          "You may appeal this decision by calling our business banking team at 1-888-418-5626"]
+         [:li.flex.gap-3
+          [:span {:style {:color "#00857c"}} "•"]
+          "You may reapply for a loan in 6 months if your financial situation changes"]
+         [:li.flex.gap-3
+          [:span {:style {:color "#00857c"}} "•"]
+          "Consider speaking with a banker about other financing options"]]]])))
 
 (defn pending-view [form-data]
   [:div.space-y-6
@@ -98,7 +122,8 @@
 (defn loan-decision-step []
   (let [form-data (:form-data @state/app-state)
         decision (:loan-decision form-data)
-        processing? (r/atom false)]
+        processing? (r/atom false)
+        continue-with-account? (r/atom false)]
     
     ;; Simulate decision if not yet made
     (when (nil? decision)
@@ -111,12 +136,15 @@
     
     (fn []
       (let [form-data (:form-data @state/app-state)
-            decision (:loan-decision form-data)]
+            decision (:loan-decision form-data)
+            on-continue-with-account (fn [wants-account]
+                                        (reset! continue-with-account? wants-account)
+                                        (state/update-form-data! {:continue-with-account-after-denial wants-account}))]
         [:div.space-y-6
          [:div.card
           [:div.flex.items-center.gap-2.mb-4
            [:div.w-8.h-8.rounded-full.flex.items-center.justify-center.text-white.text-sm.font-bold
-            {:style {:background-color "#00857c"}} "6"]
+            {:style {:background-color "#00857c"}} "7"]
            [:h2.text-xl.font-bold.text-gray-900 "Loan Decision"]]]
          
          (cond
@@ -131,7 +159,7 @@
            [approved-view form-data]
            
            (= decision :denied)
-           [denied-view form-data]
+           [denied-view form-data on-continue-with-account]
            
            (= decision :pending-review)
            [pending-view form-data]
@@ -150,6 +178,10 @@
             [:button.font-bold.py-3.px-8.rounded-lg.text-white.transition-all
              {:style {:background-color "#00857c"}
               :on-click state/go-next!}
-             (if (= decision :denied)
-               "Complete Application →"
+             (cond
+               (= decision :denied)
+               (if @continue-with-account?
+                 "Continue to Account Selection →"
+                 "Complete Application →")
+               :else
                "Continue to Account Setup →")]])]))))

@@ -21,7 +21,9 @@
   (let [form-data (:form-data @state/app-state)
         flow-type (:flow-type form-data)
         loan-decision (:loan-decision form-data)
+        continue-with-account? (:continue-with-account-after-denial form-data)
         is-loan-flow (not= flow-type :account-only)
+        has-accounts? (or (not= loan-decision :denied) continue-with-account?)
         update-bool! #(state/update-form-data! {%1 (-> %2 .-target .-checked)})
         
         all-agreed? (and (:agree-terms form-data)
@@ -35,10 +37,10 @@
       [:div.flex.items-center.gap-2.mb-4
        [:div.w-8.h-8.rounded-full.flex.items-center.justify-center.text-white.text-sm.font-bold
         {:style {:background-color "#00857c"}}
-        (case flow-type
-          :account-only "4"
-          :loan-only (if (= loan-decision :denied) "7" "8")
-          "8")]
+        (cond
+          (= flow-type :account-only) "5"
+          (and (= loan-decision :denied) (not continue-with-account?)) "8"
+          :else "9")]
        [:h2.text-xl.font-bold.text-gray-900 "Review & Submit"]]
       [:p.text-gray-600.mb-6
        "Please review your information carefully before submitting."]]
@@ -87,12 +89,14 @@
                   " | Term: " (:approved-term form-data) " months")]])
          (when (= loan-decision :denied)
            [:div.mt-4.p-3.rounded-lg {:style {:background-color "#fef2f2"}}
-            [:p.font-semibold.text-sm.text-red-700 "✗ Not Approved"]
-            [:p.text-sm.text-gray-600 "No accounts will be opened with this application."]])]])
+            [:p.font-semibold.text-sm.text-red-700 "✗ Loan Not Approved"]
+            [:p.text-sm.text-gray-600 
+             (if continue-with-account?
+               "You've chosen to continue with opening a business account."
+               "You've chosen not to open a business account at this time.")]])]])
      
-     ;; Account Selection
-     (when (and (not= loan-decision :denied)
-                (seq (:selected-accounts form-data)))
+     ;; Account Selection - show if approved OR if denied but continuing with account
+     (when (and has-accounts? (seq (:selected-accounts form-data)))
        [section-card "Selected Accounts" :account-selection
         [:div
          (for [account-id (:selected-accounts form-data)]

@@ -203,6 +203,7 @@
    :approved-amount ""
    :approved-rate ""
    :approved-term ""
+   :continue-with-account-after-denial false ; User can opt to open account even if loan denied
    
    ;; === Account Selection (Step 8) ===
    :selected-accounts #{"small-business-checking"} ; Default to checking
@@ -233,7 +234,7 @@
          first)))
 
 ;; Navigation helpers
-(defn get-next-step [current-step flow-type loan-decision]
+(defn get-next-step [current-step flow-type loan-decision continue-with-account?]
   (case current-step
     :intent :business-info
     :business-info :owner-info
@@ -243,14 +244,21 @@
     :loan-request :financials
     :financials :documents
     :documents :loan-decision
-    :loan-decision (if (= loan-decision :denied)
-                     :review ; Skip account selection if denied
+    :loan-decision (cond
+                     ;; Denied but wants to continue with account
+                     (and (= loan-decision :denied) continue-with-account?)
+                     :account-selection
+                     ;; Denied and does not want account
+                     (= loan-decision :denied)
+                     :review
+                     ;; Approved or pending - go to account selection
+                     :else
                      :account-selection)
     :account-selection :review
     :review :submitted
     nil))
 
-(defn get-prev-step [current-step flow-type loan-decision]
+(defn get-prev-step [current-step flow-type loan-decision continue-with-account?]
   (case current-step
     :business-info :intent
     :owner-info :business-info
@@ -261,11 +269,18 @@
     :account-selection (if (= flow-type :account-only)
                          :owner-info
                          :loan-decision)
-    :review (if (or (= flow-type :account-only)
-                    (= loan-decision :approved)
-                    (= flow-type :loan-and-account))
+    :review (cond
+              (= flow-type :account-only)
               :account-selection
-              :loan-decision)
+              
+              (and (= loan-decision :denied) continue-with-account?)
+              :account-selection
+              
+              (= loan-decision :denied)
+              :loan-decision
+              
+              :else
+              :account-selection)
     nil))
 
 ;; State update functions
@@ -279,7 +294,8 @@
   (let [{:keys [form-data current-step]} @app-state
         flow-type (:flow-type form-data)
         loan-decision (:loan-decision form-data)
-        next-step (get-next-step current-step flow-type loan-decision)]
+        continue-with-account? (:continue-with-account-after-denial form-data)
+        next-step (get-next-step current-step flow-type loan-decision continue-with-account?)]
     (when next-step
       (if (= next-step :submitted)
         (swap! app-state assoc :submitted true)
@@ -290,7 +306,8 @@
   (let [{:keys [form-data current-step]} @app-state
         flow-type (:flow-type form-data)
         loan-decision (:loan-decision form-data)
-        prev-step (get-prev-step current-step flow-type loan-decision)]
+        continue-with-account? (:continue-with-account-after-denial form-data)
+        prev-step (get-prev-step current-step flow-type loan-decision continue-with-account?)]
     (when prev-step
       (swap! app-state assoc :current-step prev-step)
       (.scrollTo js/window #js {:top 0 :behavior "smooth"}))))
