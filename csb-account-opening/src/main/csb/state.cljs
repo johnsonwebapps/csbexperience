@@ -71,6 +71,10 @@
   (swap! app-state assoc :page :unified-application)
   (.scrollTo js/window #js {:top 0 :behavior "smooth"}))
 
+(defn go-to-dashboard! []
+  (swap! app-state assoc :page :dashboard)
+  (.scrollTo js/window #js {:top 0 :behavior "smooth"}))
+
 (defn go-to-oao-sso! []
   (swap! app-state assoc :page :oao-sso)
   (.scrollTo js/window #js {:top 0 :behavior "smooth"}))

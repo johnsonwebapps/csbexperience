@@ -1,5 +1,29 @@
 (ns csb.components.landing
-  (:require [csb.state :as state]))
+  (:require [csb.state :as state]
+            [csb.unified.state :as unified-state]))
+
+(defn my-applications-bar []
+  (let [stats (unified-state/get-all-applications)
+        drafts (filter #(= (:status %) :draft) stats)
+        submitted (filter #(= (:status %) :submitted) stats)]
+    (when (seq stats)
+      [:div {:style {:background-color "#006b64" :padding "12px 0"}}
+       [:div.mx-auto.px-4 {:style {:max-width "1200px"}}
+        [:div.flex.items-center.justify-between
+         [:div.flex.items-center.gap-4.text-white.text-sm
+          [:span.font-medium "📋 You have " (count stats) " saved application(s)"]
+          (when (seq drafts)
+            [:span.px-2.py-1.rounded-full.text-xs
+             {:style {:background-color "rgba(255,255,255,0.2)"}}
+             (str (count drafts) " draft(s)")])
+          (when (seq submitted)
+            [:span.px-2.py-1.rounded-full.text-xs
+             {:style {:background-color "rgba(255,255,255,0.2)"}}
+             (str (count submitted) " submitted")])]
+         [:button.px-4.py-2.text-sm.font-medium.text-white.rounded-lg.transition-colors
+          {:style {:background-color "rgba(255,255,255,0.15)"}
+           :on-click state/go-to-dashboard!}
+          "View My Applications →"]]]])))
 
 (defn landing-page []
   [:div.min-h-screen.flex.flex-col {:style {:background-color "#f5f5f5"}}
@@ -18,6 +42,9 @@
        [:a.text-sm.font-semibold.px-4.py-2.rounded
         {:href "#" :style {:color "#00857c"}}
         "Log In"]]]]]
+   
+   ;; My Applications Bar (shown if user has saved applications)
+   [my-applications-bar]
    
    ;; Hero Section
    [:div {:style {:background "linear-gradient(135deg, #00857c 0%, #006b64 100%)"

@@ -120,6 +120,29 @@
   (state/start-over!)
   (main-state/go-to-landing!))
 
+(defn save-draft-button []
+  (let [saving? (r/atom false)
+        saved? (r/atom false)]
+    (fn []
+      [:button.px-4.py-2.text-sm.font-medium.rounded-lg.transition-colors.flex.items-center.gap-2
+       {:style {:background-color (if @saved? "#e6f4f2" "#f3f4f6")
+                :color (if @saved? "#00857c" "#374151")
+                :border "1px solid" 
+                :border-color (if @saved? "#00857c" "#d1d5db")}
+        :on-click (fn []
+                    (reset! saving? true)
+                    (state/save-draft!)
+                    (js/setTimeout
+                     (fn []
+                       (reset! saving? false)
+                       (reset! saved? true)
+                       (js/setTimeout #(reset! saved? false) 2000))
+                     500))}
+       (cond
+         @saving? [:span "Saving..."]
+         @saved? [:span "✓ Draft Saved"]
+         :else [:span "💾 Save Draft"])])))
+
 (defn unified-app []
   (let [{:keys [current-step submitted form-data]} @state/app-state
         flow-type (:flow-type form-data)
@@ -139,6 +162,19 @@
        [:div.text-white.text-sm.flex.items-center.gap-4
         [:span "Need Help?"]
         [:a.font-medium.hover:underline {:href "tel:1-888-418-5626"} "1-888-418-5626"]]]]
+     
+     ;; Action bar with Save Draft and View Applications
+     (when (and (not submitted) (not= current-step :intent))
+       [:div.bg-white.border-b.border-gray-200
+        [:div.container.mx-auto.px-4.py-3.flex.items-center.justify-between
+         [:div.flex.items-center.gap-4
+          [save-draft-button]
+          [:button.px-4.py-2.text-sm.font-medium.text-gray-600.hover:text-gray-900.flex.items-center.gap-2
+           {:on-click main-state/go-to-dashboard!}
+           [:span "📋 My Applications"]]]
+         [:div.text-sm.text-gray-500
+          (when (:app-id @state/app-state)
+            (str "Application ID: " (subs (str (:app-id @state/app-state)) 0 8) "..."))]]])
      
      ;; Main content
      [:main.flex-1.container.mx-auto.px-4.py-8

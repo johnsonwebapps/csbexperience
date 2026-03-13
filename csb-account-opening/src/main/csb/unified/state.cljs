@@ -1,5 +1,6 @@
 (ns csb.unified.state
-  (:require [reagent.core :as r]))
+  (:require [reagent.core :as r]
+            [csb.storage :as storage]))
 
 ;; Flow types
 (def flow-types
@@ -219,7 +220,8 @@
   (r/atom {:current-step :intent
            :form-data initial-data
            :submitted false
-           :validation-errors {}}))
+           :validation-errors {}
+           :app-id nil}))  ;; Track current application ID
 
 ;; Get current step index for progress display
 (defn get-step-index [step-id flow-type loan-approved?]
@@ -325,8 +327,50 @@
              {:loan-decision :denied
               :loan-decision-notes "We're unable to approve your loan at this time based on the information provided."}))))
 
+;; Save current application as draft
+(defn save-draft! []
+  (let [state @app-state
+        app-data {:id (:app-id state)
+                  :status :draft
+                  :current-step (:current-step state)
+                  :form-data (:form-data state)
+                  :submitted false}
+        saved (storage/save-application! app-data)]
+    (swap! app-state assoc :app-id (:id saved))
+    saved))
+
+;; Submit application (mark as submitted and save)
+(defn submit-application! []
+  (let [state @app-state
+        app-data {:id (:app-id state)
+                  :status :submitted
+                  :current-step (:current-step state)
+                  :form-data (:form-data state)
+                  :submitted true
+                  :submitted-at (.toISOString (js/Date.))}]
+    (storage/save-application! app-data)
+    (swap! app-state assoc :submitted true)))
+
+;; Load an existing application
+(defn load-application! [app-id]
+  (when-let [app (storage/get-application app-id)]
+    (reset! app-state {:current-step (:current-step app)
+                       :form-data (:form-data app)
+                       :submitted (:submitted app)
+                       :validation-errors {}
+                       :app-id (:id app)})))
+
+;; Delete an application
+(defn delete-app! [app-id]
+  (storage/delete-application! app-id))
+
+;; Get all applications (for dashboard)
+(defn get-all-applications []
+  (storage/get-all-applications))
+
 (defn start-over! []
   (reset! app-state {:current-step :intent
                      :form-data initial-data
                      :submitted false
-                     :validation-errors {}}))
+                     :validation-errors {}
+                     :app-id nil}))

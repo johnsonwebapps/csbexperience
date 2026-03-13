@@ -1,8 +1,7 @@
 (ns csb.core
-  (:require [reagent.core :as r]
-            [reagent.dom.client :as rdom]
-            [csb.state :as state]
-            [csb.components.app :refer [app]]))
+  (:require [reagent.dom.client :as rdom]
+            [csb.components.app :refer [app]]
+            [csb.storage :as storage]))
 
 (defonce root (atom nil))
 
@@ -11,5 +10,7 @@
     (rdom/render @root [app])))
 
 (defn ^:export init []
+  ;; Load data from file at startup (merges with localStorage)
+  (storage/load-from-file! nil)
   (reset! root (rdom/create-root (.getElementById js/document "root")))
   (render))
