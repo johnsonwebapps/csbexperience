@@ -13,6 +13,7 @@
             [csb.loan.app :as loan-app]
             [csb.unified.app :as unified-app]
             [csb.unified.dashboard :as unified-dashboard]
+            [csb.unified.state :as unified-state]
             [csb.oao.app :as oao-app]
             [csb.oao.state :as oao-state]))
 
@@ -88,9 +89,10 @@
       :loan-application [loan-app/loan-app]
       :unified-application [unified-app/unified-app]
       :dashboard [unified-dashboard/dashboard]
-      :oao-sso (do (when-not (:entry-type (:form-data @oao-state/app-state))
-                     (oao-state/init-sso-flow!))
-                   [oao-app/oao-app])
+      ;; SSO flow now uses unified app with pre-filled data
+      :oao-sso (do (when-not (unified-state/sso-authenticated?)
+                     (unified-state/init-from-sso!))
+                   [unified-app/unified-app])
       :oao-new-enroll (do (when-not (:entry-type (:form-data @oao-state/app-state))
                             (oao-state/init-new-enroll-flow!))
                           [oao-app/oao-app])

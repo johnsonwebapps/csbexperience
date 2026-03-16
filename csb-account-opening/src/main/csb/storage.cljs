@@ -150,11 +150,16 @@
 (defn get-submitted []
   (get-applications-by-status :submitted))
 
+;; Get applications pending review
+(defn get-pending-review []
+  (get-applications-by-status :pending-review))
+
 ;; Get statistics
 (defn get-stats []
   (let [apps (get-all-applications)]
     {:total (count apps)
      :drafts (count (filter #(= (:status %) :draft) apps))
+     :pending-review (count (filter #(= (:status %) :pending-review) apps))
      :submitted (count (filter #(= (:status %) :submitted) apps))
      :approved (count (filter #(= (get-in % [:form-data :loan-decision]) :approved) apps))
      :denied (count (filter #(= (get-in % [:form-data :loan-decision]) :denied) apps))}))

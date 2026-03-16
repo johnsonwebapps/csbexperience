@@ -4,10 +4,9 @@
 (defn section-card [title edit-step children]
   [:div.card.mb-4
    [:div.flex.items-center.justify-between.mb-4.pb-2.border-b
-    [:h3.font-semibold.text-lg {:style {:color "#00857c"}} title]
-    [:button.text-sm.font-medium.hover:underline
-     {:style {:color "#00857c"}
-      :on-click #(state/go-to-step! edit-step)}
+    [:h3.font-semibold.uppercase.tracking-wide {:style {:color "#00857c" :letter-spacing "1px"}} title]
+    [:button.btn-text.text-sm
+     {:on-click #(state/go-to-step! edit-step)}
      "Edit"]]
    children])
 
@@ -34,14 +33,15 @@
     
     [:div.space-y-6
      [:div.card
-      [:div.flex.items-center.gap-2.mb-4
-       [:div.w-8.h-8.rounded-full.flex.items-center.justify-center.text-white.text-sm.font-bold
-        {:style {:background-color "#00857c"}}
+      [:div.flex.items-center.gap-3.mb-4
+       [:div.step-dot.active
         (cond
           (= flow-type :account-only) "5"
           (and (= loan-decision :denied) (not continue-with-account?)) "8"
           :else "9")]
-       [:h2.text-xl.font-bold.text-gray-900 "Review & Submit"]]
+       [:h2.text-xl.font-bold.text-gray-900.uppercase.tracking-wide 
+        {:style {:letter-spacing "1px"}}
+        "Review & Submit"]]
       [:p.text-gray-600.mb-6
        "Please review your information carefully before submitting."]]
      
@@ -81,14 +81,16 @@
          [data-row "Term" (str (:loan-term form-data) " months")]
          [data-row "Purpose" (:loan-purpose form-data)]
          (when (= loan-decision :approved)
-           [:div.mt-4.p-3.rounded-lg {:style {:background-color "rgba(0, 133, 124, 0.1)"}}
+           [:div.mt-4.p-3.rounded {:style {:background-color "rgba(0, 133, 124, 0.1)"
+                                            :border-left "4px solid #00857c"}}
             [:p.font-semibold.text-sm {:style {:color "#00857c"}} "✓ Pre-Approved"]
             [:p.text-sm.text-gray-600 
              (str "Amount: $" (:approved-amount form-data) 
                   " | Rate: " (:approved-rate form-data)
                   " | Term: " (:approved-term form-data) " months")]])
          (when (= loan-decision :denied)
-           [:div.mt-4.p-3.rounded-lg {:style {:background-color "#fef2f2"}}
+           [:div.mt-4.p-3.rounded {:style {:background-color "#fef2f2"
+                                            :border-left "4px solid #c41230"}}
             [:p.font-semibold.text-sm.text-red-700 "✗ Loan Not Approved"]
             [:p.text-sm.text-gray-600 
              (if continue-with-account?
@@ -108,51 +110,52 @@
      
      ;; Agreements
      [:div.card
-      [:h3.font-semibold.text-lg.mb-4.pb-2.border-b {:style {:color "#00857c"}}
+      [:h3.font-semibold.uppercase.tracking-wide.mb-4.pb-2.border-b 
+       {:style {:color "#00857c" :letter-spacing "1px"}}
        "Agreements & Disclosures"]
       
       [:div.space-y-4
        (when is-loan-flow
-         [:label.flex.items-start.gap-3.cursor-pointer
-          [:input.mt-1
+         [:label.flex.items-start.gap-3.cursor-pointer.p-2.rounded.hover:bg-gray-50.transition-colors
+          [:input.mt-1.form-checkbox
            {:type "checkbox"
             :checked (:agree-credit-check form-data)
             :on-change #(update-bool! :agree-credit-check %)}]
           [:span.text-sm.text-gray-700
            "I authorize Cambridge Savings Bank to obtain credit reports and verify my identity and the information I have provided."]])
        
-       [:label.flex.items-start.gap-3.cursor-pointer
-        [:input.mt-1
+       [:label.flex.items-start.gap-3.cursor-pointer.p-2.rounded.hover:bg-gray-50.transition-colors
+        [:input.mt-1.form-checkbox
          {:type "checkbox"
           :checked (:agree-terms form-data)
           :on-change #(update-bool! :agree-terms %)}]
         [:span.text-sm.text-gray-700
          "I have read and agree to the "
-         [:a.underline {:href "#" :style {:color "#00857c"}} "Terms and Conditions"]
+         [:a.font-semibold.hover:underline {:href "#" :style {:color "#00857c"}} "Terms and Conditions"]
          " and "
-         [:a.underline {:href "#" :style {:color "#00857c"}} "Account Agreement"]
+         [:a.font-semibold.hover:underline {:href "#" :style {:color "#00857c"}} "Account Agreement"]
          "."]]
        
-       [:label.flex.items-start.gap-3.cursor-pointer
-        [:input.mt-1
+       [:label.flex.items-start.gap-3.cursor-pointer.p-2.rounded.hover:bg-gray-50.transition-colors
+        [:input.mt-1.form-checkbox
          {:type "checkbox"
           :checked (:agree-esign form-data)
           :on-change #(update-bool! :agree-esign %)}]
         [:span.text-sm.text-gray-700
          "I consent to receive documents and communications electronically (E-Sign Act consent)."]]
        
-       [:label.flex.items-start.gap-3.cursor-pointer
-        [:input.mt-1
+       [:label.flex.items-start.gap-3.cursor-pointer.p-2.rounded.hover:bg-gray-50.transition-colors
+        [:input.mt-1.form-checkbox
          {:type "checkbox"
           :checked (:agree-privacy form-data)
           :on-change #(update-bool! :agree-privacy %)}]
         [:span.text-sm.text-gray-700
          "I acknowledge receipt of the "
-         [:a.underline {:href "#" :style {:color "#00857c"}} "Privacy Policy"]
+         [:a.font-semibold.hover:underline {:href "#" :style {:color "#00857c"}} "Privacy Policy"]
          "."]]
        
-       [:label.flex.items-start.gap-3.cursor-pointer
-        [:input.mt-1
+       [:label.flex.items-start.gap-3.cursor-pointer.p-2.rounded.hover:bg-gray-50.transition-colors
+        [:input.mt-1.form-checkbox
          {:type "checkbox"
           :checked (:certify-accurate form-data)
           :on-change #(update-bool! :certify-accurate %)}]
@@ -160,13 +163,11 @@
          "I certify that all information provided in this application is true, accurate, and complete."]]]]
      
      ;; Navigation
-     [:div.flex.justify-between.pt-4
-      [:button.font-medium.py-3.px-6.rounded-lg.transition-all
-       {:style {:color "#00857c" :border "2px solid #00857c"}
-        :on-click state/go-back!}
+     [:div.flex.justify-between.pt-6
+      [:button.btn-secondary
+       {:on-click state/go-back!}
        "← Back"]
-      [:button.font-bold.py-4.px-10.rounded-lg.text-white.transition-all.text-lg
-       {:style {:background-color (if all-agreed? "#00857c" "#ccc")}
-        :disabled (not all-agreed?)
+      [:button.btn-primary
+       {:disabled (not all-agreed?)
         :on-click state/go-next!}
        "Submit Application"]]]))

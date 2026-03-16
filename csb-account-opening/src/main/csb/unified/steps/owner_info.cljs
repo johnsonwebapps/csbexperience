@@ -16,10 +16,11 @@
         update-field! #(state/update-form-data! {%1 (-> %2 .-target .-value)})]
     [:div.space-y-6
      [:div.card
-      [:div.flex.items-center.gap-2.mb-4
-       [:div.w-8.h-8.rounded-full.flex.items-center.justify-center.text-white.text-sm.font-bold
-        {:style {:background-color "#00857c"}} "2"]
-       [:h2.text-xl.font-bold.text-gray-900 "Owner Information"]]
+      [:div.flex.items-center.gap-3.mb-4
+       [:div.step-dot.active "2"]
+       [:h2.text-xl.font-bold.text-gray-900.uppercase.tracking-wide
+        {:style {:letter-spacing "1px"}}
+        "Owner Information"]]
       [:p.text-gray-600.mb-6
        "Tell us about the primary owner or authorized signer. "
        (when needs-credit-check
@@ -27,19 +28,20 @@
      
      ;; Personal Information
      [:div.card
-      [:h3.font-semibold.text-lg.mb-4.pb-2.border-b {:style {:color "#00857c"}}
+      [:h3.font-semibold.uppercase.tracking-wide.mb-4.pb-2.border-b 
+       {:style {:color "#00857c" :letter-spacing "1px"}}
        "Personal Details"]
       
       [:div.grid.grid-cols-2.gap-4
        [form-field {:label "First Name" :required true}
-        [:input.form-input.w-full.rounded-lg.border-gray-300
+        [:input.form-input.w-full.rounded.border-gray-300
          {:type "text"
           :value (:owner-first-name form-data)
           :on-change #(update-field! :owner-first-name %)
           :placeholder "John"}]]
        
        [form-field {:label "Last Name" :required true}
-        [:input.form-input.w-full.rounded-lg.border-gray-300
+        [:input.form-input.w-full.rounded.border-gray-300
          {:type "text"
           :value (:owner-last-name form-data)
           :on-change #(update-field! :owner-last-name %)
@@ -47,14 +49,14 @@
       
       [:div.grid.grid-cols-2.gap-4
        [form-field {:label "Title/Position" :required true}
-        [:input.form-input.w-full.rounded-lg.border-gray-300
+        [:input.form-input.w-full.rounded.border-gray-300
          {:type "text"
           :value (:owner-title form-data)
           :on-change #(update-field! :owner-title %)
           :placeholder "CEO, Owner, President, etc."}]]
        
        [form-field {:label "Ownership Percentage" :required true}
-        [:input.form-input.w-full.rounded-lg.border-gray-300
+        [:input.form-input.w-full.rounded.border-gray-300
          {:type "number"
           :min 0
           :max 100
@@ -64,19 +66,19 @@
      
      ;; Contact Information
      [:div.card
-      [:h3.font-semibold.text-lg.mb-4.pb-2.border-b {:style {:color "#00857c"}}
+      [:h3.font-semibold.uppercase.tracking-wide.mb-4.pb-2.border-b {:style {:color "#00857c" :letter-spacing "1px"}}
        "Contact Information"]
       
       [:div.grid.grid-cols-2.gap-4
        [form-field {:label "Email Address" :required true}
-        [:input.form-input.w-full.rounded-lg.border-gray-300
+        [:input.form-input.w-full.rounded.border-gray-300
          {:type "email"
           :value (:owner-email form-data)
           :on-change #(update-field! :owner-email %)
           :placeholder "john.smith@email.com"}]]
        
        [form-field {:label "Phone Number" :required true}
-        [:input.form-input.w-full.rounded-lg.border-gray-300
+        [:input.form-input.w-full.rounded.border-gray-300
          {:type "tel"
           :value (:owner-phone form-data)
           :on-change #(update-field! :owner-phone %)
@@ -84,11 +86,11 @@
      
      ;; Identity Verification (SSN, DOB)
      [:div.card
-      [:h3.font-semibold.text-lg.mb-4.pb-2.border-b {:style {:color "#00857c"}}
+      [:h3.font-semibold.uppercase.tracking-wide.mb-4.pb-2.border-b {:style {:color "#00857c" :letter-spacing "1px"}}
        "Identity Verification"]
       
       (when needs-credit-check
-        [:div.rounded-lg.p-3.mb-4 {:style {:background-color "#fef3c7"}}
+        [:div.rounded.p-3.mb-4 {:style {:background-color "#fef3c7"}}
          [:div.flex.gap-2
           [:span "⚠️"]
           [:p.text-sm.text-yellow-800
@@ -97,7 +99,7 @@
       
       [:div.grid.grid-cols-2.gap-4
        [form-field {:label "Social Security Number" :required true}
-        [:input.form-input.w-full.rounded-lg.border-gray-300
+        [:input.form-input.w-full.rounded.border-gray-300
          {:type "password"
           :value (:owner-ssn form-data)
           :on-change #(update-field! :owner-ssn %)
@@ -105,18 +107,18 @@
           :autoComplete "off"}]]
        
        [form-field {:label "Date of Birth" :required true}
-        [:input.form-input.w-full.rounded-lg.border-gray-300
+        [:input.form-input.w-full.rounded.border-gray-300
          {:type "date"
           :value (:owner-dob form-data)
           :on-change #(update-field! :owner-dob %)}]]]]
      
      ;; Home Address
      [:div.card
-      [:h3.font-semibold.text-lg.mb-4.pb-2.border-b {:style {:color "#00857c"}}
+      [:h3.font-semibold.uppercase.tracking-wide.mb-4.pb-2.border-b {:style {:color "#00857c" :letter-spacing "1px"}}
        "Home Address"]
       
       [form-field {:label "Street Address" :required true}
-       [:input.form-input.w-full.rounded-lg.border-gray-300
+       [:input.form-input.w-full.rounded.border-gray-300
         {:type "text"
          :value (:owner-address form-data)
          :on-change #(update-field! :owner-address %)
@@ -125,14 +127,14 @@
       [:div.grid.grid-cols-6.gap-4
        [:div.col-span-3
         [form-field {:label "City" :required true}
-         [:input.form-input.w-full.rounded-lg.border-gray-300
+         [:input.form-input.w-full.rounded.border-gray-300
           {:type "text"
            :value (:owner-city form-data)
            :on-change #(update-field! :owner-city %)
            :placeholder "Boston"}]]]
        [:div.col-span-1
         [form-field {:label "State" :required true}
-         [:input.form-input.w-full.rounded-lg.border-gray-300
+         [:input.form-input.w-full.rounded.border-gray-300
           {:type "text"
            :value (:owner-state form-data)
            :on-change #(update-field! :owner-state %)
@@ -140,7 +142,7 @@
            :maxLength 2}]]]
        [:div.col-span-2
         [form-field {:label "ZIP Code" :required true}
-         [:input.form-input.w-full.rounded-lg.border-gray-300
+         [:input.form-input.w-full.rounded.border-gray-300
           {:type "text"
            :value (:owner-zip form-data)
            :on-change #(update-field! :owner-zip %)
@@ -148,12 +150,12 @@
      
      ;; ID Verification
      [:div.card
-      [:h3.font-semibold.text-lg.mb-4.pb-2.border-b {:style {:color "#00857c"}}
+      [:h3.font-semibold.uppercase.tracking-wide.mb-4.pb-2.border-b {:style {:color "#00857c" :letter-spacing "1px"}}
        "Government-Issued ID"]
       
       [:div.grid.grid-cols-2.gap-4
        [form-field {:label "ID Type" :required true}
-        [:select.form-select.w-full.rounded-lg.border-gray-300
+        [:select.form-select.w-full.rounded.border-gray-300
          {:value (:owner-id-type form-data)
           :on-change #(update-field! :owner-id-type %)}
          [:option {:value ""} "Select ID type..."]
@@ -163,7 +165,7 @@
          [:option {:value "military-id"} "Military ID"]]]
        
        [form-field {:label "ID Number" :required true}
-        [:input.form-input.w-full.rounded-lg.border-gray-300
+        [:input.form-input.w-full.rounded.border-gray-300
          {:type "text"
           :value (:owner-id-number form-data)
           :on-change #(update-field! :owner-id-number %)
@@ -171,7 +173,7 @@
       
       [:div.grid.grid-cols-2.gap-4
        [form-field {:label "Issuing State"}
-        [:input.form-input.w-full.rounded-lg.border-gray-300
+        [:input.form-input.w-full.rounded.border-gray-300
          {:type "text"
           :value (:owner-id-state form-data)
           :on-change #(update-field! :owner-id-state %)
@@ -179,17 +181,17 @@
           :maxLength 2}]]
        
        [form-field {:label "Expiration Date" :required true}
-        [:input.form-input.w-full.rounded-lg.border-gray-300
+        [:input.form-input.w-full.rounded.border-gray-300
          {:type "date"
           :value (:owner-id-expiry form-data)
           :on-change #(update-field! :owner-id-expiry %)}]]]]
      
      ;; Beneficial Ownership Certification
      [:div.card
-      [:h3.font-semibold.text-lg.mb-4.pb-2.border-b {:style {:color "#00857c"}}
+      [:h3.font-semibold.uppercase.tracking-wide.mb-4.pb-2.border-b {:style {:color "#00857c" :letter-spacing "1px"}}
        "Beneficial Ownership"]
       
-      [:div.rounded-lg.p-4.mb-4 {:style {:background-color "#f0f5f4"}}
+      [:div.rounded.p-4.mb-4 {:style {:background-color "#f0f5f4"}}
        [:p.text-sm.text-gray-600
         "Federal regulations require us to identify all individuals who own 25% or more of the business, "
         "or who have significant control over the business."]]
@@ -205,12 +207,10 @@
         "and that the information provided is true and accurate."]]]
      
      ;; Navigation
-     [:div.flex.justify-between.pt-4
-      [:button.font-medium.py-3.px-6.rounded-lg.transition-all
-       {:style {:color "#00857c" :border "2px solid #00857c"}
-        :on-click state/go-back!}
+     [:div.flex.justify-between.pt-6
+      [:button.btn-secondary
+       {:on-click state/go-back!}
        "← Back"]
-      [:button.font-bold.py-3.px-8.rounded-lg.text-white.transition-all
-       {:style {:background-color "#00857c"}
-        :on-click state/go-next!}
+      [:button.btn-primary
+       {:on-click state/go-next!}
        "Continue →"]]]))

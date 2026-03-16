@@ -13,20 +13,21 @@
         update-field! #(state/update-form-data! {%1 (-> %2 .-target .-value)})]
     [:div.space-y-6
      [:div.card
-      [:div.flex.items-center.gap-2.mb-4
-       [:div.w-8.h-8.rounded-full.flex.items-center.justify-center.text-white.text-sm.font-bold
-        {:style {:background-color "#00857c"}} "3"]
-       [:h2.text-xl.font-bold.text-gray-900 "Loan Request"]]
+      [:div.flex.items-center.gap-3.mb-4
+       [:div.step-dot.active "3"]
+       [:h2.text-xl.font-bold.text-gray-900.uppercase.tracking-wide
+        {:style {:letter-spacing "1px"}}
+        "Loan Request"]]
       [:p.text-gray-600.mb-6
        "Tell us about the financing you need. We offer a variety of loan products to help your business grow."]]
      
      ;; Loan Type Selection
      [:div.card
-      [:h3.font-semibold.text-lg.mb-4.pb-2.border-b {:style {:color "#00857c"}}
+      [:h3.font-semibold.uppercase.tracking-wide.mb-4.pb-2.border-b {:style {:color "#00857c" :letter-spacing "1px"}}
        "What type of financing do you need?"]
       
       [form-field {:label "Loan Type" :required true}
-       [:select.form-select.w-full.rounded-lg.border-gray-300
+       [:select.form-select.w-full.rounded.border-gray-300
         {:value (:loan-type form-data)
          :on-change #(update-field! :loan-type %)}
         (for [{:keys [value label]} state/loan-types]
@@ -35,7 +36,7 @@
       
       ;; Loan type descriptions
       (when (not= "" (:loan-type form-data))
-        [:div.rounded-lg.p-4.mt-4 {:style {:background-color "#f0f5f4"}}
+        [:div.rounded.p-4.mt-4 {:style {:background-color "#f0f5f4"}}
          (case (:loan-type form-data)
            "term-loan" 
            [:p.text-sm.text-gray-600 "Fixed payments over a set period. Ideal for major purchases or expansion projects."]
@@ -55,21 +56,21 @@
      
      ;; Loan Details
      [:div.card
-      [:h3.font-semibold.text-lg.mb-4.pb-2.border-b {:style {:color "#00857c"}}
+      [:h3.font-semibold.uppercase.tracking-wide.mb-4.pb-2.border-b {:style {:color "#00857c" :letter-spacing "1px"}}
        "Loan Details"]
       
       [:div.grid.grid-cols-2.gap-4
        [form-field {:label "Requested Loan Amount" :required true}
         [:div.relative
          [:span.absolute.left-3.text-gray-500 {:style {:top "50%" :transform "translateY(-50%)"}} "$"]
-         [:input.form-input.w-full.rounded-lg.border-gray-300.pl-7
+         [:input.form-input.w-full.rounded.border-gray-300.pl-7
           {:type "number"
            :value (:loan-amount form-data)
            :on-change #(update-field! :loan-amount %)
            :placeholder "100,000"}]]]
        
        [form-field {:label "Desired Loan Term" :required true}
-        [:select.form-select.w-full.rounded-lg.border-gray-300
+        [:select.form-select.w-full.rounded.border-gray-300
          {:value (:loan-term form-data)
           :on-change #(update-field! :loan-term %)}
          [:option {:value ""} "Select term..."]
@@ -84,7 +85,7 @@
          [:option {:value "300"} "300 months (25 years)"]]]]
       
       [form-field {:label "Primary Purpose" :required true}
-       [:select.form-select.w-full.rounded-lg.border-gray-300
+       [:select.form-select.w-full.rounded.border-gray-300
         {:value (:loan-purpose form-data)
          :on-change #(update-field! :loan-purpose %)}
         (for [{:keys [value label]} state/loan-purposes]
@@ -92,7 +93,7 @@
           [:option {:value value} label])]]
       
       [form-field {:label "Please describe how you will use the funds"}
-       [:textarea.form-textarea.w-full.rounded-lg.border-gray-300
+       [:textarea.form-textarea.w-full.rounded.border-gray-300
         {:rows 3
          :value (:loan-purpose-detail form-data)
          :on-change #(update-field! :loan-purpose-detail %)
@@ -100,11 +101,11 @@
      
      ;; Timeline
      [:div.card
-      [:h3.font-semibold.text-lg.mb-4.pb-2.border-b {:style {:color "#00857c"}}
+      [:h3.font-semibold.uppercase.tracking-wide.mb-4.pb-2.border-b {:style {:color "#00857c" :letter-spacing "1px"}}
        "Timeline"]
       
       [form-field {:label "When do you need the funds?"}
-       [:select.form-select.w-full.rounded-lg.border-gray-300
+       [:select.form-select.w-full.rounded.border-gray-300
         {:value (:urgency form-data)
          :on-change #(update-field! :urgency %)}
         [:option {:value ""} "Select timeline..."]
@@ -115,7 +116,7 @@
         [:option {:value "exploring"} "Just exploring options"]]]]
      
      ;; Info about checking account requirement
-     [:div.rounded-lg.p-4 {:style {:background-color "rgba(0, 133, 124, 0.08)"
+     [:div.rounded.p-4 {:style {:background-color "rgba(0, 133, 124, 0.08)"
                                    :border "1px solid rgba(0, 133, 124, 0.2)"}}
       [:div.flex.gap-3
        [:div.text-xl "ℹ️"]
@@ -126,12 +127,10 @@
          "We'll set this up for you automatically at no additional cost."]]]]
      
      ;; Navigation
-     [:div.flex.justify-between.pt-4
-      [:button.font-medium.py-3.px-6.rounded-lg.transition-all
-       {:style {:color "#00857c" :border "2px solid #00857c"}
-        :on-click state/go-back!}
+     [:div.flex.justify-between.pt-6
+      [:button.btn-secondary
+       {:on-click state/go-back!}
        "← Back"]
-      [:button.font-bold.py-3.px-8.rounded-lg.text-white.transition-all
-       {:style {:background-color "#00857c"}
-        :on-click state/go-next!}
+      [:button.btn-primary
+       {:on-click state/go-next!}
        "Continue →"]]]))

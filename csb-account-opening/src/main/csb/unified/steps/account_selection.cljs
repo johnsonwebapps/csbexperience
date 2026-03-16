@@ -3,7 +3,7 @@
 
 (defn account-card [product selected? on-toggle disabled?]
   (let [{:keys [id name description features required-for-loan]} product]
-    [:div.p-5.rounded-xl.border-2.transition-all
+    [:div.p-5.rounded.border-2.transition-all
      {:class (cond
                disabled? "border-gray-100 bg-gray-50 opacity-60"
                selected? "shadow-lg"
@@ -24,8 +24,8 @@
        [:div.flex.items-center.gap-2.mb-1
         [:h3.font-bold {:style {:color (if selected? "#00857c" "#333")}} name]
         (when required-for-loan
-          [:span.text-xs.px-2.py-0.5.rounded-full.font-medium
-           {:style {:background-color "#fef3c7" :color "#92400e"}}
+          [:span.text-xs.px-2.py-0.5.rounded.font-semibold.uppercase
+           {:style {:background-color "#fef3c7" :color "#92400e" :letter-spacing "0.5px"}}
            "Required for Loan"])]
        [:p.text-sm.text-gray-600.mb-3 description]
        [:ul.space-y-1
@@ -54,11 +54,12 @@
     
     [:div.space-y-6
      [:div.card
-      [:div.flex.items-center.gap-2.mb-4
-       [:div.w-8.h-8.rounded-full.flex.items-center.justify-center.text-white.text-sm.font-bold
-        {:style {:background-color "#00857c"}} 
+      [:div.flex.items-center.gap-3.mb-4
+       [:div.step-dot.active 
         (if (= flow-type :account-only) "3" "7")]
-       [:h2.text-xl.font-bold.text-gray-900 "Select Your Accounts"]]
+       [:h2.text-xl.font-bold.text-gray-900.uppercase.tracking-wide
+        {:style {:letter-spacing "1px"}}
+        "Select Your Accounts"]]
       [:p.text-gray-600.mb-6
        (if checking-required?
          "Your loan approval includes a Small Business Checking account for payments. You can also add additional accounts."
@@ -80,7 +81,7 @@
      
      ;; Summary
      [:div.card
-      [:h3.font-semibold.text-lg.mb-4.pb-2.border-b {:style {:color "#00857c"}}
+      [:h3.font-semibold.uppercase.tracking-wide.mb-4.pb-2.border-b {:style {:color "#00857c" :letter-spacing "1px"}}
        "Selected Accounts"]
       (if (empty? selected-accounts)
         [:p.text-gray-500.text-sm "No accounts selected. Please select at least one account."]
@@ -94,7 +95,7 @@
      
      ;; Info note
      (when checking-required?
-       [:div.rounded-lg.p-4 {:style {:background-color "rgba(0, 133, 124, 0.08)"
+       [:div.rounded.p-4 {:style {:background-color "rgba(0, 133, 124, 0.08)"
                                      :border "1px solid rgba(0, 133, 124, 0.2)"}}
         [:div.flex.gap-3
          [:div.text-xl "ℹ️"]
@@ -105,13 +106,11 @@
            "This ensures timely payments and helps maintain your good standing."]]]])
      
      ;; Navigation
-     [:div.flex.justify-between.pt-4
-      [:button.font-medium.py-3.px-6.rounded-lg.transition-all
-       {:style {:color "#00857c" :border "2px solid #00857c"}
-        :on-click state/go-back!}
+     [:div.flex.justify-between.pt-6
+      [:button.btn-secondary
+       {:on-click state/go-back!}
        "← Back"]
-      [:button.font-bold.py-3.px-8.rounded-lg.text-white.transition-all
-       {:style {:background-color (if (empty? selected-accounts) "#ccc" "#00857c")}
-        :disabled (empty? selected-accounts)
+      [:button.btn-primary
+       {:disabled (empty? selected-accounts)
         :on-click state/go-next!}
        "Continue →"]]]))

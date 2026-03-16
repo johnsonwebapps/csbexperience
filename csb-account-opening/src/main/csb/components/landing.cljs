@@ -7,23 +7,28 @@
         drafts (filter #(= (:status %) :draft) stats)
         submitted (filter #(= (:status %) :submitted) stats)]
     (when (seq stats)
-      [:div {:style {:background-color "#006b64" :padding "12px 0"}}
-       [:div.mx-auto.px-4 {:style {:max-width "1200px"}}
-        [:div.flex.items-center.justify-between
-         [:div.flex.items-center.gap-4.text-white.text-sm
-          [:span.font-medium "📋 You have " (count stats) " saved application(s)"]
-          (when (seq drafts)
-            [:span.px-2.py-1.rounded-full.text-xs
-             {:style {:background-color "rgba(255,255,255,0.2)"}}
-             (str (count drafts) " draft(s)")])
-          (when (seq submitted)
-            [:span.px-2.py-1.rounded-full.text-xs
-             {:style {:background-color "rgba(255,255,255,0.2)"}}
-             (str (count submitted) " submitted")])]
-         [:button.px-4.py-2.text-sm.font-medium.text-white.rounded-lg.transition-colors
-          {:style {:background-color "rgba(255,255,255,0.15)"}
-           :on-click state/go-to-dashboard!}
-          "View My Applications →"]]]])))
+      [:div {:style {:background-color "#fff" 
+                     :padding "16px" 
+                     :border-radius "8px"
+                     :border "1px solid #e5e7eb" 
+                     :margin-bottom "24px"
+                     :box-shadow "0 1px 3px rgba(0,0,0,0.08)"}}
+       [:div.flex.items-center.justify-between
+        [:div.flex.items-center.gap-4.text-sm
+         [:span.font-medium {:style {:color "#333"}} 
+          "📋 You have " (count stats) " saved application(s)"]
+         (when (seq drafts)
+           [:span.px-2.py-1.rounded-full.text-xs
+            {:style {:background-color "#fef3c7" :color "#92400e"}}
+            (str (count drafts) " draft(s)")])
+         (when (seq submitted)
+           [:span.px-2.py-1.rounded-full.text-xs
+            {:style {:background-color "#d1fae5" :color "#065f46"}}
+            (str (count submitted) " submitted")])]
+        [:button.px-4.py-2.text-sm.font-medium.rounded-lg.transition-colors
+         {:style {:background-color "#00857c" :color "#fff"}
+          :on-click state/go-to-dashboard!}
+         "View My Applications →"]]])))
 
 (defn landing-page []
   [:div.min-h-screen.flex.flex-col {:style {:background-color "#f5f5f5"}}
@@ -34,7 +39,7 @@
       [:a {:href "https://www.cambridgesavings.com"}
        [:img {:src "/images/header.png"
               :alt "Cambridge Savings Bank"
-              :style {:max-height "680px" :width "2080px"}}]]
+              :style {:max-height "680px" :width "1280px"}}]]
       [:div.flex.items-center.gap-4
        [:a.text-sm.font-semibold {:href "tel:888-418-5626"
                                    :style {:color "#00857c"}}
@@ -42,9 +47,6 @@
        [:a.text-sm.font-semibold.px-4.py-2.rounded
         {:href "#" :style {:color "#00857c"}}
         "Log In"]]]]]
-   
-   ;; My Applications Bar (shown if user has saved applications)
-   [my-applications-bar]
    
    ;; Hero Section
    [:div {:style {:background "linear-gradient(135deg, #00857c 0%, #006b64 100%)"
@@ -58,6 +60,10 @@
    ;; Main Content
    [:div.flex-1
     [:div.mx-auto.px-4.py-12 {:style {:max-width "1100px"}}
+     
+     ;; My Applications Bar (shown if user has saved applications)
+     [my-applications-bar]
+     
      [:h2.text-center.font-bold.mb-8 {:style {:color "#333" :font-size "28px"}}
       "How can we help your business today?"]
      

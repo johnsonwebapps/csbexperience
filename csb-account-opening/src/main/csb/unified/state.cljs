@@ -290,6 +290,9 @@
 (defn set-flow-type! [flow-type]
   (swap! app-state assoc-in [:form-data :flow-type] flow-type))
 
+;; Forward declaration for submit-application!
+(declare submit-application!)
+
 (defn go-next! []
   (let [{:keys [form-data current-step]} @app-state
         flow-type (:flow-type form-data)
@@ -298,9 +301,12 @@
         next-step (get-next-step current-step flow-type loan-decision continue-with-account?)]
     (when next-step
       (if (= next-step :submitted)
-        (swap! app-state assoc :submitted true)
+        (submit-application!)  ;; Save the application with pending-review status
         (swap! app-state assoc :current-step next-step))
-      (.scrollTo js/window #js {:top 0 :behavior "smooth"}))))
+      (js/setTimeout
+       #(when-let [el (.getElementById js/document "main-content")]
+          (.scrollIntoView el #js {:behavior "smooth" :block "start"}))
+       50))))
 
 (defn go-back! []
   (let [{:keys [form-data current-step]} @app-state
@@ -310,11 +316,17 @@
         prev-step (get-prev-step current-step flow-type loan-decision continue-with-account?)]
     (when prev-step
       (swap! app-state assoc :current-step prev-step)
-      (.scrollTo js/window #js {:top 0 :behavior "smooth"}))))
+      (js/setTimeout
+       #(when-let [el (.getElementById js/document "main-content")]
+          (.scrollIntoView el #js {:behavior "smooth" :block "start"}))
+       50))))
 
 (defn go-to-step! [step-id]
   (swap! app-state assoc :current-step step-id)
-  (.scrollTo js/window #js {:top 0 :behavior "smooth"}))
+  (js/setTimeout
+   #(when-let [el (.getElementById js/document "main-content")]
+      (.scrollIntoView el #js {:behavior "smooth" :block "start"}))
+   50))
 
 (defn simulate-loan-decision! []
   ;; In production, this would call nCino API
@@ -356,17 +368,20 @@
     (swap! app-state assoc :app-id (:id saved))
     saved))
 
-;; Submit application (mark as submitted and save)
+;; Submit application (mark as pending-review for human review)
 (defn submit-application! []
   (let [state @app-state
+        now (.toISOString (js/Date.))
         app-data {:id (:app-id state)
-                  :status :submitted
+                  :status :pending-review  ;; All applications require human review
                   :current-step (:current-step state)
                   :form-data (:form-data state)
                   :submitted true
-                  :submitted-at (.toISOString (js/Date.))}]
+                  :submitted-at now
+                  :review-status :awaiting-review
+                  :review-notes nil}]
     (storage/save-application! app-data)
-    (swap! app-state assoc :submitted true)))
+    (swap! app-state assoc :submitted true :app-id (:id (storage/save-application! app-data)))))
 
 ;; Load an existing application
 (defn load-application! [app-id]
@@ -391,3 +406,64 @@
                      :submitted false
                      :validation-errors {}
                      :app-id nil}))
+
+;; Sample SSO customer data (simulates data from Online Banking SSO token)
+(def sso-customer-data
+  {;; Business Information (from existing OLB business profile)
+   :business-legal-name "Acme Consulting LLC"
+   :dba-name "Acme Business Solutions"
+   :business-type "llc"
+   :ein "12-3456789"
+   :state-of-incorporation "MA"
+   :date-established "2018-03-15"
+   :years-in-business "8"
+   :business-phone "(617) 555-1234"
+   :business-email "john.smith@acmeconsulting.com"
+   :business-website "www.acmeconsulting.com"
+   :business-address "100 Cambridge Street"
+   :business-city "Cambridge"
+   :business-state "MA"
+   :business-zip "02139"
+   :naics-code "541611"
+   :industry "Management Consulting Services"
+   :business-description "Business strategy and operations consulting for small to mid-size companies"
+   :number-of-employees "12"
+   
+   ;; Owner/Applicant Information (from existing OLB user profile)
+   :owner-first-name "John"
+   :owner-last-name "Smith"
+   :owner-title "Managing Partner"
+   :owner-email "john.smith@acmeconsulting.com"
+   :owner-phone "(617) 555-5678"
+   :owner-ssn "123-45-6789"
+   :owner-dob "1975-06-20"
+   :owner-address "456 Elm Street"
+   :owner-city "Somerville"
+   :owner-state "MA"
+   :owner-zip "02144"
+   :owner-ownership-pct "60"
+   :owner-id-type "drivers-license"
+   :owner-id-number "S12345678"
+   :owner-id-state "MA"
+   :owner-id-expiry "2028-06-20"
+   
+   ;; Financial Information (from existing account history)
+   :annual-revenue "850000"
+   :annual-revenue-prior "720000"
+   :cash-on-hand "125000"})
+
+;; Initialize unified flow with SSO pre-filled data
+(defn init-from-sso! []
+  (reset! app-state {:current-step :intent
+                     :form-data (merge initial-data 
+                                       sso-customer-data
+                                       {:sso-authenticated true
+                                        :sso-session-id (str "SSO-" (random-uuid))})
+                     :submitted false
+                     :validation-errors {}
+                     :app-id nil}))
+
+;; Check if current session is SSO authenticated
+(defn sso-authenticated? []
+  (get-in @app-state [:form-data :sso-authenticated]))
+

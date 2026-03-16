@@ -28,6 +28,13 @@
      {:style {:background-color "#fef3c7" :color "#92400e"}}
      "Draft"]
     
+    ;; Pending review status takes priority (all submitted apps start here)
+    (= status :pending-review)
+    [:span.inline-flex.items-center.gap-1.px-2.py-1.rounded-full.text-xs.font-medium
+     {:style {:background-color "#fef3c7" :color "#b45309"}}
+     [:span.w-1.5.h-1.5.rounded-full.bg-amber-500.animate-pulse]
+     "Pending Review"]
+    
     (= loan-decision :approved)
     [:span.px-2.py-1.rounded-full.text-xs.font-medium
      {:style {:background-color "#d1fae5" :color "#065f46"}}
@@ -38,15 +45,10 @@
      {:style {:background-color "#fee2e2" :color "#991b1b"}}
      "Denied"]
     
-    (= loan-decision :pending-review)
-    [:span.px-2.py-1.rounded-full.text-xs.font-medium
-     {:style {:background-color "#dbeafe" :color "#1e40af"}}
-     "Pending Review"]
-    
     (= status :submitted)
     [:span.px-2.py-1.rounded-full.text-xs.font-medium
      {:style {:background-color "#d1fae5" :color "#065f46"}}
-     "Submitted"]
+     "Completed"]
     
     :else
     [:span.px-2.py-1.rounded-full.text-xs.font-medium
@@ -122,11 +124,11 @@
     [:div.text-3xl.font-bold.text-yellow-600 (:drafts stats)]
     [:div.text-sm.text-gray-600 "Drafts"]]
    [:div.bg-white.rounded-lg.p-4.text-center.border
-    [:div.text-3xl.font-bold.text-green-600 (:approved stats)]
-    [:div.text-sm.text-gray-600 "Approved"]]
+    [:div.text-3xl.font-bold.text-amber-600 (:pending-review stats)]
+    [:div.text-sm.text-gray-600 "Pending Review"]]
    [:div.bg-white.rounded-lg.p-4.text-center.border
-    [:div.text-3xl.font-bold.text-blue-600 (:submitted stats)]
-    [:div.text-sm.text-gray-600 "Submitted"]]])
+    [:div.text-3xl.font-bold.text-green-600 (:approved stats)]
+    [:div.text-sm.text-gray-600 "Approved"]]])
 
 (defn file-sync-controls [_on-refresh]
   (let [importing? (r/atom false)
@@ -242,14 +244,26 @@
                      ^{:key (:id app)}
                      [application-card app on-continue on-delete])]]))
              
-             ;; Submitted section
-             (let [submitted (filter #(= (:status %) :submitted) apps)]
-               (when (seq submitted)
+             ;; Pending Review section (applications awaiting human review)
+             (let [pending-review (filter #(= (:status %) :pending-review) apps)]
+               (when (seq pending-review)
                  [:div.mt-8
-                  [:h2.font-semibold.text-lg.text-gray-700.mb-3 
-                   (str "Submitted (" (count submitted) ")")]
+                  [:h2.font-semibold.text-lg.text-amber-700.mb-3.flex.items-center.gap-2
+                   [:span.w-2.h-2.rounded-full.bg-amber-500.animate-pulse]
+                   (str "Pending Review (" (count pending-review) ")")]
                   [:div.space-y-3
-                   (for [app (sort-by :submitted-at > submitted)]
+                   (for [app (sort-by :submitted-at > pending-review)]
+                     ^{:key (:id app)}
+                     [application-card app on-continue on-delete])]]))
+             
+             ;; Completed section (reviewed and processed)
+             (let [completed (filter #(= (:status %) :submitted) apps)]
+               (when (seq completed)
+                 [:div.mt-8
+                  [:h2.font-semibold.text-lg.text-green-700.mb-3 
+                   (str "Completed (" (count completed) ")")]
+                  [:div.space-y-3
+                   (for [app (sort-by :submitted-at > completed)]
                      ^{:key (:id app)}
                      [application-card app on-continue on-delete])]]))])]
          

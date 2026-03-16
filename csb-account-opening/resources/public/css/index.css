@@ -40,35 +40,61 @@ body {
 .btn-primary {
   background-color: var(--csb-teal);
   color: white;
-  padding: 0.75rem 2rem;
+  padding: 0.875rem 2.5rem;
   border-radius: 4px;
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 0.9375rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  transition: background-color 0.2s;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
   cursor: pointer;
   border: none;
+  box-shadow: 0 2px 4px rgba(0, 133, 124, 0.2);
 }
-.btn-primary:hover { background-color: var(--csb-teal-dark); }
-.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary:hover { 
+  background-color: var(--csb-teal-dark); 
+  box-shadow: 0 4px 8px rgba(0, 133, 124, 0.3);
+  transform: translateY(-1px);
+}
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 133, 124, 0.2);
+}
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
 .btn-secondary {
   background-color: var(--csb-white);
   color: var(--csb-teal);
-  padding: 0.75rem 2rem;
+  padding: 0.875rem 2.5rem;
   border-radius: 4px;
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 0.9375rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  transition: all 0.2s;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
   cursor: pointer;
   border: 2px solid var(--csb-teal);
 }
 .btn-secondary:hover { 
   background-color: var(--csb-teal); 
   color: white;
+  box-shadow: 0 2px 4px rgba(0, 133, 124, 0.2);
+}
+
+.btn-text {
+  background: none;
+  color: var(--csb-teal);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+}
+.btn-text:hover { 
+  background-color: rgba(0, 133, 124, 0.08);
+  text-decoration: underline;
 }
 
 .form-label {

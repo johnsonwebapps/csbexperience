@@ -28,7 +28,7 @@
       [:a {:href "https://www.cambridgesavings.com"}
        [:img {:src "/images/header.png"
               :alt "Cambridge Savings Bank"
-              :style {:max-height "680px" :width "auto" :max-width "2080px"}}]]
+              :style {:max-height "680px" :width "auto" :max-width "1280px"}}]]
       
       ;; Right side - Log In link
       [:div.flex.items-center.gap-4

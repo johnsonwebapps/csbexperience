@@ -75,15 +75,17 @@
         current-idx (get-step-index current-step steps)]
     [:div.w-72.flex-shrink-0
      [:div {:style {:background-color "#00857c"}
-            :class "rounded-xl p-6 sticky top-6"}
-      [:h2.text-white.font-bold.text-lg.mb-6 "Application Progress"]
+            :class "rounded p-6 sticky top-6"}
+      [:h2.text-white.font-bold.uppercase.tracking-wide.mb-6 
+       {:style {:letter-spacing "1px"}}
+       "Application Progress"]
       [:ol.space-y-1
        (map-indexed
         (fn [idx step]
           (let [is-current (= current-step (:id step))
                 is-completed (and current-idx (< idx current-idx))]
             ^{:key (:id step)}
-            [:li.flex.items-center.gap-3.py-2.px-2.rounded-lg.transition-colors
+            [:li.flex.items-center.gap-3.py-2.px-2.rounded.transition-colors
              {:class (when is-current "bg-white bg-opacity-20")
               :style {:cursor (if is-completed "pointer" "default")}
               :on-click #(when is-completed (state/go-to-step! (:id step)))}
@@ -94,20 +96,24 @@
                         :else "bg-white bg-opacity-30")
                :style {:color (if (or is-completed is-current) "#00857c" "#fff")}}
               (if is-completed "✓" (:number step))]
-             [:span.text-sm
+             [:span.text-sm.uppercase
               {:style {:color (cond
                                 is-current "white"
                                 is-completed "rgba(255,255,255,0.9)"
                                 :else "rgba(255,255,255,0.6)")
-                       :font-weight (if (or is-current is-completed) "600" "400")}}
+                       :font-weight (if (or is-current is-completed) "600" "400")
+                       :letter-spacing "0.5px"
+                       :font-size "0.8125rem"}}
               (:label step)]]))
         steps)]
       
       ;; Flow type indicator
       (when flow-type
-        [:div.mt-6.pt-4.text-xs
-         {:style {:border-top "1px solid rgba(255,255,255,0.2)" :color "rgba(255,255,255,0.7)"}}
-         [:p.font-medium.mb-1 "Application Type:"]
+        [:div.mt-6.pt-4.text-xs.uppercase
+         {:style {:border-top "1px solid rgba(255,255,255,0.2)" 
+                  :color "rgba(255,255,255,0.7)"
+                  :letter-spacing "0.5px"}}
+         [:p.font-semibold.mb-1 "Application Type:"]
          [:p (case flow-type
                :account-only "Business Account"
                :loan-only "Business Loan"
@@ -162,6 +168,7 @@
         flow-type (:flow-type form-data)
         loan-decision (:loan-decision form-data)
         continue-with-account? (:continue-with-account-after-denial form-data)
+        sso-authenticated? (:sso-authenticated form-data)
         steps (get-visible-steps flow-type loan-decision continue-with-account?)
         current-idx (get-step-index current-step steps)
         step-info (when current-idx (nth steps current-idx nil))]
@@ -173,10 +180,31 @@
         {:on-click go-to-landing!}
         [:img {:src "/images/header.png" 
                :alt "Cambridge Savings Bank"
-               :style {:height "680px"}}]]
+               :style {:max-height "680px" :width "1280px"}}]]
        [:div.text-white.text-sm.flex.items-center.gap-4
+        (when sso-authenticated?
+          [:span.px-3.py-1.rounded-full.text-xs.font-medium
+           {:style {:background-color "rgba(255,255,255,0.2)"}}
+           "✓ Signed In"])
         [:span "Need Help?"]
         [:a.font-medium.hover:underline {:href "tel:1-888-418-5626"} "1-888-418-5626"]]]]
+     
+     ;; SSO Welcome Banner
+     (when (and sso-authenticated? (not submitted) (= current-step :intent))
+       [:div {:style {:background-color "#e6f4f2" :border-bottom "1px solid #00857c"}}
+        [:div.container.mx-auto.px-4.py-4
+         [:div.flex.items-center.gap-4
+          [:div.w-12.h-12.rounded-full.flex.items-center.justify-center
+           {:style {:background-color "#00857c"}}
+           [:span.text-white.text-xl "👤"]]
+          [:div.flex-1
+           [:h3.font-semibold.text-gray-900 
+            (str "Welcome back, " (:owner-first-name form-data) "!")]
+           [:p.text-sm.text-gray-600 
+            "You're signed in via Online Banking. Your information has been pre-filled from your existing profile."]]
+          [:div.text-right.text-sm
+           [:div.font-medium {:style {:color "#00857c"}} (:business-legal-name form-data)]
+           [:div.text-gray-500 (str "Session: " (subs (str (:sso-session-id form-data)) 0 12) "...")]]]]])
      
      ;; Action bar with Save Draft and View Applications
      (when (and (not submitted) (not= current-step :intent))
@@ -188,11 +216,17 @@
            {:on-click main-state/go-to-dashboard!}
            [:span "📋 My Applications"]]]
          [:div.text-sm.text-gray-500
-          (when (:app-id @state/app-state)
-            (str "Application ID: " (subs (str (:app-id @state/app-state)) 0 8) "..."))]]])
+          (cond
+            sso-authenticated?
+            [:span.flex.items-center.gap-2
+             [:span.text-green-600 "●"]
+             "Online Banking Session Active"]
+            (:app-id @state/app-state)
+            (str "Application ID: " (subs (str (:app-id @state/app-state)) 0 8) "...")
+            :else nil)]]])
      
      ;; Main content
-     [:main.flex-1.container.mx-auto.px-4.py-8
+     [:main#main-content.flex-1.container.mx-auto.px-4.py-8
       [:div {:style {:display "flex" :gap "2rem" :align-items "flex-start"}}
        ;; Sidebar
        (when-not submitted

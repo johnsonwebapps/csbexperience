@@ -4,7 +4,7 @@
 
 (defn document-item [doc uploaded?]
   (let [{:keys [id label required]} doc]
-    [:div.flex.items-center.justify-between.p-4.rounded-lg.border
+    [:div.flex.items-center.justify-between.p-4.rounded.border
      {:class (if uploaded? "border-green-200 bg-green-50" "border-gray-200")}
      [:div.flex.items-center.gap-3
       [:div.w-8.h-8.rounded-full.flex.items-center.justify-center
@@ -15,7 +15,7 @@
         label
         (when required [:span.text-red-500.ml-1 "*"])]
        [:p.text-xs.text-gray-500 (if uploaded? "Uploaded" "Not uploaded")]]]
-     [:button.px-4.py-2.rounded-lg.text-sm.font-medium.transition-all
+     [:button.px-4.py-2.rounded.text-sm.font-medium.transition-all
       {:style (if uploaded?
                 {:color "#00857c" :border "1px solid #00857c"}
                 {:background-color "#00857c" :color "white"})
@@ -35,10 +35,11 @@
         total-required (count required-docs)]
     [:div.space-y-6
      [:div.card
-      [:div.flex.items-center.gap-2.mb-4
-       [:div.w-8.h-8.rounded-full.flex.items-center.justify-center.text-white.text-sm.font-bold
-        {:style {:background-color "#00857c"}} "5"]
-       [:h2.text-xl.font-bold.text-gray-900 "Supporting Documents"]]
+      [:div.flex.items-center.gap-3.mb-4
+       [:div.step-dot.active "5"]
+       [:h2.text-xl.font-bold.text-gray-900.uppercase.tracking-wide
+        {:style {:letter-spacing "1px"}}
+        "Supporting Documents"]]
       [:p.text-gray-600.mb-6
        "Please upload the following documents to support your loan application. "
        "Required documents are marked with an asterisk (*)."]]
@@ -56,7 +57,7 @@
      
      ;; Required Documents
      [:div.card
-      [:h3.font-semibold.text-lg.mb-4.pb-2.border-b {:style {:color "#00857c"}}
+      [:h3.font-semibold.uppercase.tracking-wide.mb-4.pb-2.border-b {:style {:color "#00857c" :letter-spacing "1px"}}
        "Required Documents"]
       [:div.space-y-3
        (for [doc required-docs]
@@ -75,7 +76,7 @@
          [document-item doc (get uploaded (:id doc))])]]
      
      ;; Note about documents
-     [:div.rounded-lg.p-4 {:style {:background-color "rgba(0, 133, 124, 0.08)"
+     [:div.rounded.p-4 {:style {:background-color "rgba(0, 133, 124, 0.08)"
                                    :border "1px solid rgba(0, 133, 124, 0.2)"}}
       [:div.flex.gap-3
        [:div.text-xl "📋"]
@@ -88,12 +89,10 @@
          [:li "• You can upload additional documents later if needed"]]]]]
      
      ;; Navigation
-     [:div.flex.justify-between.pt-4
-      [:button.font-medium.py-3.px-6.rounded-lg.transition-all
-       {:style {:color "#00857c" :border "2px solid #00857c"}
-        :on-click state/go-back!}
+     [:div.flex.justify-between.pt-6
+      [:button.btn-secondary
+       {:on-click state/go-back!}
        "← Back"]
-      [:button.font-bold.py-3.px-8.rounded-lg.text-white.transition-all
-       {:style {:background-color "#00857c"}
-        :on-click state/go-next!}
+      [:button.btn-primary
+       {:on-click state/go-next!}
        "Continue →"]]]))
