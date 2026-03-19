@@ -81,7 +81,6 @@
            "Since you're signed in, most of your information is already on file. "
            "We've simplified the process by collecting your business and personal information just once. ")
          (case selected-flow
-           :loan-only "If your loan is approved, we'll automatically open a checking account for your loan payments at no additional cost."
            :loan-and-account "You can apply for financing and open additional accounts in one easy application."
            :account-only "Open checking, savings, money market, or CD accounts for your business."
            "Select an option above to get started.")]]]]

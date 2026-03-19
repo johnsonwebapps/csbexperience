@@ -5,8 +5,7 @@
 ;; Flow types
 (def flow-types
   [{:id :account-only :label "Open Business Account" :desc "Checking, Savings, CDs"}
-   {:id :loan-only :label "Apply for Business Loan" :desc "Term loans, lines of credit, SBA loans"}
-   {:id :loan-and-account :label "Loan + New Account" :desc "Apply for financing with a new business account"}])
+   {:id :loan-and-account :label "Business Loan (Requires Account)" :desc "Apply for financing with a new business account"}])
 
 ;; Dynamic steps based on flow selection
 ;; Base KYC/KYB steps (always required)
@@ -30,24 +29,12 @@
 (def final-steps
   [{:id :review :label "Review & Submit" :number 9}])
 
-(defn get-steps-for-flow [flow-type loan-approved?]
+(defn get-steps-for-flow [flow-type _loan-approved?]
   (case flow-type
     :account-only
     (concat base-steps
             [(assoc account-step :number 4)]
             [(assoc (first final-steps) :number 5)])
-    
-    :loan-only
-    (if loan-approved?
-      ;; If approved, need to open checking for payments
-      (concat base-steps
-              loan-steps
-              [(assoc account-step :number 8)]
-              [(assoc (first final-steps) :number 9)])
-      ;; If not yet decided or denied, no account step
-      (concat base-steps
-              loan-steps
-              [(assoc (first final-steps) :number 8)]))
     
     :loan-and-account
     (concat base-steps
@@ -123,7 +110,7 @@
 ;; Consolidated form data - no duplicates!
 (def initial-data
   {;; Flow selection
-   :flow-type nil ; :account-only, :loan-only, :loan-and-account
+   :flow-type nil ; :account-only, :loan-and-account
    
    ;; === KYB - Business Information (Step 2) ===
    :business-legal-name ""

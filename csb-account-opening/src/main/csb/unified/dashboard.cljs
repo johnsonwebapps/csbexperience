@@ -17,8 +17,7 @@
 (defn get-flow-label [flow-type]
   (case flow-type
     :account-only "Account Opening"
-    :loan-only "Loan Application"
-    :loan-and-account "Loan + Account"
+    :loan-and-account "Business Loan (Requires Account)"
     "Application"))
 
 (defn get-status-badge [status loan-decision]

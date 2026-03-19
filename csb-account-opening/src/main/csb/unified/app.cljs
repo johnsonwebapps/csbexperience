@@ -79,13 +79,13 @@
       [:h2.text-white.font-bold.uppercase.tracking-wide.mb-6 
        {:style {:letter-spacing "1px"}}
        "Application Progress"]
-      [:ol.space-y-1
+      [:div.space-y-1
        (map-indexed
         (fn [idx step]
           (let [is-current (= current-step (:id step))
                 is-completed (and current-idx (< idx current-idx))]
             ^{:key (:id step)}
-            [:li.flex.items-center.gap-3.py-2.px-2.rounded.transition-colors
+            [:div.flex.items-center.gap-3.py-2.px-2.rounded.transition-colors
              {:class (when is-current "bg-white bg-opacity-20")
               :style {:cursor (if is-completed "pointer" "default")}
               :on-click #(when is-completed (state/go-to-step! (:id step)))}
@@ -95,7 +95,7 @@
                         is-current "bg-white"
                         :else "bg-white bg-opacity-30")
                :style {:color (if (or is-completed is-current) "#00857c" "#fff")}}
-              (if is-completed "✓" (:number step))]
+              (if is-completed "✓" (inc idx))]
              [:span.text-sm.uppercase
               {:style {:color (cond
                                 is-current "white"
@@ -116,8 +116,8 @@
          [:p.font-semibold.mb-1 "Application Type:"]
          [:p (case flow-type
                :account-only "Business Account"
-               :loan-only "Business Loan"
-               :loan-and-account "Loan + Account"
+
+               :loan-and-account "Business Loan (Requires Account)"
                "")]])]]))
 
 (defn render-current-step []
@@ -239,7 +239,7 @@
         (when (and (not submitted) step-info (not= current-step :intent))
           [:div.mb-6
            [:div.text-sm.font-medium.mb-1 {:style {:color "#00857c"}}
-            (str "Step " (:number step-info) " of " (count steps))]
+            (str "Step " (inc current-idx) " of " (count steps))]
            [:h1.text-2xl.font-bold.text-gray-900 (:label step-info)]])
         
         ;; Current step content
