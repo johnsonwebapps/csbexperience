@@ -12,6 +12,9 @@ pom.xml.asc
 .lein-failures
 .nrepl-port
 .cpcache/
+csb.*
+lock
+package-lock.json
 
 # Node / JS
 node_modules/
@@ -23,3 +26,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .vite/
+.clj-kondo/.cache/v1/cljs/user.transit.json
+.lsp/.cache/db.transit.json
+csb-account-opening/package-lock.json
+csb-account-opening/package-lock.json
