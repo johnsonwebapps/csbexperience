@@ -1,4 +1,4 @@
-# CSB Experience – Small Business Account Opening
+# CSB Experience – Small Business Account Opening small little update
 
 A web application that replicates the Cambridge Savings Bank (CSB) new small business account opening flow, built to demonstrate how the experience could be enhanced in the future.
 
