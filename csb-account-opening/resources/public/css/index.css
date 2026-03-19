@@ -236,3 +236,49 @@ body {
   color: white;
 }
 
+/* KYC/KYB Verification Badges */
+.badge-kyc {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0.125rem 0.375rem;
+  border-radius: 3px;
+  background-color: #dbeafe;
+  color: #1e40af;
+  margin-left: 0.5rem;
+}
+
+.badge-kyb {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0.125rem 0.375rem;
+  border-radius: 3px;
+  background-color: #fef3c7;
+  color: #92400e;
+  margin-left: 0.5rem;
+}
+
+.badge-kyc-kyb {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0.125rem 0.375rem;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #dbeafe 50%, #fef3c7 50%);
+  color: #374151;
+  margin-left: 0.5rem;
+}
+
